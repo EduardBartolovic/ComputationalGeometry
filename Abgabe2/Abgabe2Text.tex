@@ -110,12 +110,20 @@
 	Es gebe nur einen Sonderfall wie den in der Abbildung \ref{polyInPoly}. Mit dem oben beschriebenen Ansatz würde $P_{klein}$ trotzdem als Loch bezeichnet werden da alle Eckpunkte von $P_{klein}$ in $P_{groß}$ befinden.
 	\begin{figure}[h]
 		\begin{center}
-			\includegraphics[width=5cm]{PolyInPoly.png}
+			\includegraphics[width=4cm]{PolyInPoly.png}
 			\caption{Ein Randfall in dem das blaue Polygon nicht im schwarzen liegt}
 			\label{polyInPoly}
 		\end{center}
 	\end{figure}\\
-	Um diesen Fehler zu umgehen muss zusätzlich Überprüft werden ob sich alle Punkte von $P_{groß}$ außerhalb von  $P_{klein}$ befinden. 
+	Jetzt könnte man zusätzlich überprüfen ob sich alle Punkte von $P_{groß}$ außerhalb von $P_{klein}$ befinden. Doch dies würde auch noch nicht alle Probleme wie man in Abbildung \ref{polyInPoly2} sehen kann lösen.
+	\begin{figure}[h]
+		\begin{center}
+			\includegraphics[width=4cm]{PolyInPoly2.png}
+			\caption{Ein Randfall in dem das blaue Polygon nicht im schwarzen liegt}
+			\label{polyInPoly2}
+		\end{center}
+	\end{figure}\\
+	Deshalb müsste man alle Kanten $P_{groß}$ und $P_{klein}$ nach Schnittpunkten untersuchen.
 	
 	\section{Überprüfung ob ein Punkt in einem Polygon liegt}
 	Für die Überprüfung ob ein Punkt $\tilde{p}$ in einem Polygon P liegt wird zuerst Strecke aus dem Punkt $\tilde{p}$ zu einem festgelegtem Punkt $\tilde{q}$ definiert. Der Punkt $\tilde{q}$ muss außerhalb des Polygons P liegen. Dabei legt man den Punkt rechts vom Polygon P und auf der selben Höhe des Punktes $\tilde{p}$.\\
@@ -133,9 +141,11 @@
 		\end{center}
 	\end{figure}\\
 	In folgender Tabelle werden die einzelnen Punkte/Fälle kurz beschrieben. So wird die Anzahl der Schnittpunkte, die Anzahl der echten Seitenwechsel und der Output des Algorithmus aufgelistet.\\
+	
+	\scalebox{0.9}{
 	\begin{tabular}{|c|c|c|c|c|}
 		\hline
-		Punkt & Schnittpunkte & Seitenwechsel & Kante & Output \\
+		\textbf{Punkt} & \textbf{Schnittpunkte} & \textbf{Seitenwechsel} & \textbf{Kante} & \textbf{Output} \\
 		\hline
 		1 & 1 & 1 & Nein & Inside \\
 		\hline
@@ -156,14 +166,23 @@
 		9 & 1 & 0 & Ja & Inside \\
 		\hline
 	\end{tabular}
-
+	}
 	\vspace{1cm}
+	\section{Überprüfung ob eine Stadt in einem Bundesland liegt}
+	Um zu überprüfen ob eine Stadt in einem Bundesland liegt wird erst einmal nach allen Polygonen gesucht in denen der Punkt liegt. Ist die Anzahl gerade dann liegt der Punkt nicht im Bundesland und liegt damit in einem Loch. Ist die Zahl ungerade dann liegt das Polygon in keinem Loch. Für dieses Verfahren dürfen die Polygone sich nicht schneiden. So sollte aber dieser Algorithmus auch mit komplizierten Grenzverläufen wie zum Beispiel mit der Belgischen Exklave Baarle-Hertog zurechtkommen.
+	\begin{figure}[h]
+		\begin{center}
+			\includegraphics[width=3.2cm]{StadtInBundesland.png}
+			\caption{Loch in einem Polygon in einem Loch von einem Polygon}
+			\label{	StadtInBundesland}
+		\end{center}
+	\end{figure}\\
 	\section{Ergebnisse}
 	Die Flächen der einzelnen Bundesländer:\\
 	\\
 	\begin{tabular}{|c|c|}		
 		\hline
-		Bundesland & Fläche\\
+		\textbf{Bundesland} & \textbf{Fläche}\\
 		\hline
 		Thüringen & 13725\\
 		\hline
@@ -200,12 +219,12 @@
 		Deutschland & 304194\\
 		\hline
 	\end{tabular}\\
-	\\
+	\vspace{2.0cm}\\
 	Die Ergebnisse für die Städte die einzelnen Bundesländern zugewiesen werden:
-	\vspace{0.2cm}\\
+	\vspace{0.5cm}\\
 	\begin{tabular}{|c|c|}
 		\hline
-		Bundesland & Landeshauptstadt\\
+		\textbf{Bundesland} & \textbf{Landeshauptstadt}\\
 		\hline
 		Thüringen & Erfurt\\
 		\hline
@@ -245,9 +264,10 @@
 	\section{Testen des Algorithmus}
 	Eine Möglichkeit ist es die Fläche mit der echten Daten aus Wikipedia zu vergleichen.\\
 	\vspace{0.2cm}
+	\scalebox{0.85}{
 	\begin{tabular}{|c|c|c|c|}
 		\hline
-		Bundesland & Algorithmus & Wikipedia & Faktor\\
+		\textbf{Bundesland} & \textbf{Algorithmus} & \textbf{Wikipedia} & \textbf{Faktor}\\
 		\hline
 		Thüringen & 13725 & 16202 & 0.8471 \\
 		\hline
@@ -284,27 +304,27 @@
 		\hline
 		Deutschland & 304194 & 357580 & 0.8507 \\
 		\hline
-	\end{tabular}\\
-	\vspace{0.2cm}
-	Im Grunde sich alle Verhältnisse sehr ähnlich. Ein grober Fehler ist erst einmal unwahrscheinlich.
-	Diese Methode ist aber etwas zu ungenau um kleine Fehler zu entdecken.\\
-	Deshalb wurden über 50 Junit Tests geschrieben um die Funktionalität des Codes zu überprüfen. Diese Tests decken vorallem die bisher angesprochenen Randfälle ab.\\
-	Auch wurde jedes Bundesland genau untersucht. So wurde überprüft ob Inseln addiert werden und Löcher subtrahiert werden.
+	\end{tabular}
+	}\\
+	Im Grunde sich alle Verhältnisse sehr ähnlich. Ein grober Fehler ist erst einmal unwahrscheinlich. Diese Methode ist aber etwas zu ungenau um kleine Fehler zu entdecken. Dafür ist der Datensatz zu Fehlerhaft. So fehlen zum Beispiel einige innerdeutsche En- und Exklaven.\\
+	Deshalb wurden über 50 Junit Tests geschrieben um die Funktionalität des Codes zu überprüfen. Diese Tests decken vorallem die bisher angesprochenen Randfälle ab. Die Tests wurden an Kommilitonen weitergegeben und diese bestätigten deren Qualität.\\
+	Auch wurde jedes Bundesland genau untersucht. So wurde überprüft ob Inseln und Exklaven addiert werden und Löcher subtrahiert werden.\\
+	Die korrekte Zuordnung der Landeshauptsädte
 	
 	
 	\section{Komplexität}
 	\begin{itemize}
-		\item Die Komplexitätsklasse für das Einlesen der Daten liegt ist $\mathcal{O}(n)$, wobei n die Anzahl der Eckpunkte beschreibt.
+		\item Die Komplexitätsklasse für das Einlesen der Daten liegt ist $\mathcal{O}(n)$, wobei n die Anzahl der Datenpunkte beschreibt.
 		
-		\item Die Komplexitätsklasse für das Berechnen der Fläche eines Polygon P liegt ist $\mathcal{O}(n)$, wobei n die Anzahl der Eckpunkte des Polygons P beschreibt. Die oben durchgeführten Optimierungen verändern nichts an der Komplexitätsklasse sondern beschleunigen nur die Operationen selbst.
+		\item Die Komplexitätsklasse für das Berechnen der Fläche eines Polygon P ist $\mathcal{O}(n)$, wobei n die Anzahl der Eckpunkte des Polygons P beschreibt. Die oben durchgeführten Optimierungen verändern nichts an der Komplexitätsklasse sondern beschleunigen nur die Operationen selbst.
 		
 		\item Die Komplexitätsklasse für das Berechnen ob ein Punkt $\tilde{p}$ in einem Polygon P liegt ist $\mathcal{O}(n)$, wobei n die Anzahl der Eckpunkte des Polygons P beschreibt.
 		
-		\item Die Komplexitätsklasse für das Berechnen ob ein Polygon $P_1$ in einem Polygon $P_2$ liegt ist $\mathcal{O}(n)$, wobei n die Anzahl der Eckpunkte der Polygone beschreibt.
+		\item Die Komplexitätsklasse für das Berechnen ob ein Polygon $P_1$ in einem Polygon $P_2$ liegt ist $\mathcal{O}(n^2)$. Dies entsteht da alle Kanten von $P_1$ mit allen Kanten von $P_2$ verglichen werden müssen. Dieser Vergleich alleine hat im Worstcase die Komplexität $\mathcal{O}(m*n)$  wobei m und n die Anzahl der Eckpunkte der Polygone $P_1$ und $P_2$ beschreibt. Zusätzlich muss noch getestet werden ob ein Punkte von $P_1$ in $P_2$ liegt was die Komplexität $\mathcal{O}(n)$ besitzt. Es muss nur ein Punkt getestet werden da schon überprüft wird ob sich die Kanten schneiden. Somit ist die Komplexität $\mathcal{O}(n^2+n)$ was trotzdem in der Komplexitätsklasse $\mathcal{O}(n^2)$ liegt.
 		
-		\item Die Komplexitätsklasse für das Berechnen wie viele Polygone aus einer Menge $\{P_1,P_2,...,P_n\}$ in einander liegen ist $\mathcal{O}(n^2)$, wobei n die Anzahl der Polygone beschreibt. Dies würde sich theoretisch optimieren lassen. Da aber die Menge der Polygone nie wirklich groß ist wäre der Aufwand für einer effizienteren Implementierung unverhältnismäßig groß.
+		\item Die Komplexitätsklasse für das Berechnen wie viele Polygone aus einer Menge $\{P_1,P_2,...,P_n\}$ in einander liegen ist $\mathcal{O}(n^2)$, wobei n die Anzahl der Polygone beschreibt. Dies würde sich theoretisch optimieren lassen. Da aber die Menge der Polygone in der Aufgabe nie wirklich groß ist wäre der Aufwand für einer effizienteren Implementierung unverhältnismäßig groß und würde keine oder nur kleine Verbesserungen bringen.
 	\end{itemize}
-	Zusammengefasst kann man sagen das der Aufwand der Berechnung der Fläche der Bundesländer überwiegend in der linearen Komplexitätsklasse liegt.
+	Zusammengefasst kann man sagen das die je nach Aufgaben die Brechungen in der linearen oder in der quadratischen Komplexitätsklasse liegen.
 	
 	\begin{thebibliography}{00}
 		\bibitem{b1}https://www.wikiwand.com/de/Gaußsche\_Trapezformel
@@ -316,7 +336,9 @@
 	\section{Anhang}
 	
 	Berechnung der Fläche eines Polygons:
-	\begin{lstlisting}
+	
+
+	\begin{lstlisting}[basicstyle=\tiny]
     /**
 	* calculate the Area of this Polygon
 	* @return double
@@ -340,25 +362,31 @@
 	\end{lstlisting}
 	
 	Überprüfung ob Polygon $P_{this}$ in Polygon $P_{that}$ liegt:
-	\begin{lstlisting}
-	public boolean isPolygonInside(Polygon that){
-		if( !isClosed() || !that.isClosed() )
-			throw new IllegalArgumentException("Polygon is not Closed");
-		
-		final boolean thisInThat = this.getCords()
-		.stream()
-		.map(p -> that.isPointInside(p))
-		.allMatch(r -> r);
-		final boolean thatNotinThis = that.getCords()
-		.stream()
-		.map(p -> !this.isPointInside(p))
-		.allMatch(r -> r) ;
-		
-		return thisInThat && thatNotinThis;         
+	\begin{lstlisting}[basicstyle=\tiny]
+/**
+* Check if This is inside That
+* @param that
+* @return boolean
+*/
+public boolean isPolygonInside(Polygon that){
+	if( !isClosed() || !that.isClosed() )
+		throw new IllegalArgumentException("Polygon is not Closed");
+	
+	for(int thisCounter = 1; thisCounter < this.cords.size(); thisCounter++){
+		final Line2Points thisLine = new Line2Points(this.cords.get(thisCounter-1), this.cords.get(thisCounter));
+		for(int thatCounter = 1; thatCounter < that.cords.size(); thatCounter++){
+			final Line2Points thatLine = new Line2Points(that.cords.get(thatCounter-1), that.cords.get(thatCounter));
+			if(thisLine.isIntersecting(thatLine)){
+				return false; // Is intersecting so this can not be in that
+			}
+		}
 	}
+	
+	return that.isPointInside(this.getCords().get(0)); //check if one Point of this is in that   
+}
 	\end{lstlisting}
 	Berechnung der Fläche eines Bundeslandes:
-	\begin{lstlisting}
+	\begin{lstlisting}[basicstyle=\tiny]
 	public double calculateArea(){
 		double sum = 0;
 		for(Polygon p : areas){
@@ -380,30 +408,72 @@
 	\end{lstlisting}	
 	
 	Berechnung ob ein Punkt/Stadt in einem Bundeslandes liegt:
-	\begin{lstlisting}
-		public boolean isPointInside(Point p){
-			final List<Polygon> polygons = areas.stream() 
-			.filter(a -> a.isPointInside(p))
-			.collect(Collectors.toList()); // all Polygons containing P
-			
-			if(polygons.isEmpty())
-				return false;
-			
-			if(polygons.size() == 1)
-				return true;
-			
-			if(polygons.size() > 2)
-				throw new IllegalStateException("2 Holes? or overlapping");
-			
-			final Polygon hole;
-			if(polygons.get(0).calculateArea() < polygons.get(1).calculateArea())
-				hole = polygons.get(0);
-			else
-				hole = polygons.get(1);
-			//say no if Point is in Hole
-			return !hole.isPointInside(p); 
-		}
+	\begin{lstlisting}[basicstyle=\tiny]
+/**
+* Polygone muessen vollstaendige Loecher voneinander sein. Sie duerfen sich nicht schneiden.
+* @param p Punkt
+* @return Ob Punkt in Polygon oder im Loch ist.
+*/
+public boolean isPointInside(Point p){
+	final List<Polygon> relevantPolygons = areas.stream() 
+	.filter(a -> a.isPointInside(p))
+	.collect(Collectors.toList()); // all Polygons containing P
+	
+	
+	return relevantPolygons.size()%2==1;
+}
 	\end{lstlisting}
-
+	Berechnung ob ein Punkt in einem Polygon liegt:
+\begin{lstlisting}[basicstyle=\tiny]
+public boolean isPointInside(Point p){
+	if(!isClosed())
+		throw new IllegalArgumentException("Polygon is not Closed");
+	//Check if Point lies on an edge
+	final Line2Points pointLine = new Line2Points(p,p); // generate Dummy Line to check if it does intersect with Edges
+	for(int counter = 1; counter < cords.size() ; counter++){
+		if(pointLine.isIntersecting(new Line2Points(cords.get(counter-1),cords.get(counter)))) 
+		return true;          
+	}
+	
+	final double maxXValue = cords.stream()
+		.mapToDouble(c -> c.getX())
+		.reduce(Double::max)
+		.orElseThrow(IllegalStateException::new);
+	
+	if(p.getX() > maxXValue)
+		return false;
+	
+	final Point extreme = new Point(maxXValue+1, p.getY());
+	
+	int startCounter = 0;
+	while(ccw(extreme, p, cords.get(startCounter)) == 0)
+		startCounter++;
+	
+	int intersections = 0;
+	double lr = orientation(extreme, p, cords.get(startCounter));
+	for(int counter = startCounter+1; counter < cords.size() ; counter++){
+		final double lrNew = orientation(extreme, p, cords.get(counter));
+		if( Math.abs( lrNew - lr ) == 2){
+			lr = lrNew;
+			double o1 = ccw(cords.get(counter-1), cords.get(counter), extreme);
+			double o2 = ccw(cords.get(counter-1), cords.get(counter), p);
+			if(o1*o2<=0){
+				intersections++;
+			}
+		}
+	}
+	for(int counter = 1; counter <= startCounter ; counter++){
+		final double lrNew = orientation(extreme, p, cords.get(counter));
+		if( Math.abs( lrNew - lr ) == 2){
+			lr = lrNew;
+			double o1 = ccw(cords.get(counter-1), cords.get(counter), extreme);
+			double o2 = ccw(cords.get(counter-1), cords.get(counter), p);
+			if(o1*o2<=0)
+				intersections++;
+		}
+	}
+	return intersections % 2 == 1; // return true if count is odd, false otherwise
+}
+\end{lstlisting}
 
 	\end{document}
