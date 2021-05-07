@@ -157,25 +157,22 @@ Um Fehler bei Berechnungen mit Double Werten auszugleichen wurde ein kleiner Thr
 Um die Laufzeit des Programm's zu verbessern wurden zwei Wege untersucht.
 \subsection{Optimierung der Komplexität des Algorithmus}
 Ein naiver Ansatz würde alle Strecken jeweils zweimal vergleichen. So würde mit zwei \textit{for-Schleifen} einmal AB verglichen werden und später nochmal BA. Ein Vergleich einer Strecke mit sich selbst wird nicht durchgeführt da diese sich ohnehin schneiden. Diese Methode würde in einer Komplexität von $\mathcal{O}(n^2-n)$ resultieren.\\
-Hier gibt es Verbesserungspotential. So kann man die 2 \textit{for-Schleife} mit dem aktuellen Index der ersten beginnen lassen:
+Hier gibt es Verbesserungspotential. So kann man die 2 \textit{for-Schleife} mit dem aktuellen Index der äußeren Schleife um Eins erhöht beginnen lassen. Den letzten äußeren Schleifendurchgang kann man sich sparen da hier bereits alle Segmente verglichen wurden.
 \begin{lstlisting}
 int counter = 0;
-for(int m = 0 ; m < size ; m++){
-	for(int n = m ; n < size; n++){
-		if(m!=n){
-			if(lines.get(n).isIntersecting(lines.get(m))){
-				counter++;
-			}
+for(int m = 0 ; m < size-1 ; m++){
+	for(int n = m+1 ; n < size; n++){
+		if(lines.get(n).isIntersecting(lines.get(m))){
+			counter++;
 		}
 	}
 }
 \end{lstlisting}
 Bei jedem äußeren Schleifendurchgang spart man sich einen weiteren inneren Durchlauf.
-Deshalb lässt sich die Komplexität als Summe beschreiben:
+Man kann die Anzahl der Durchläufe mit der Gaußschen Summenformel beschreiben:
 \[ \sum_{k=1}^{n} k = 1+2+3+4+5+...+n = (n^2 + n) / 2 \]
-Entfernt man dann noch die Vergleiche mit sich selbst kommt man zu $\mathcal{O}(\frac{(n^2 + n)}{2}-n)$\\
-Es sollte gelten:??????????????????????
-\[ \mathcal{O}(n^2) \geq \mathcal{O}(\frac{(n^2 + n)}{2}-n) \]
+Es sollte gelten:
+\[ \mathcal{O}(n^2) \geq \mathcal{O}(\frac{(n^2 + n)}{2}) \]
 Beide liegen aber noch immer in der gleichen Komplexitätsklasse $\mathcal{O}(n^2)$.
 
 \subsection{Parallelisierung}
