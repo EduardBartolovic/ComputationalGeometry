@@ -131,7 +131,7 @@
 	Jetzt zählt man die Schnittpunkte nur mit echten Seitenwechseln zwischen der Strecke $[\tilde{p}\tilde{q}]$ und allen Kanten des Polygons P. Dabei startet man bei einem Eckpunkt $p_{Start}$ der nicht auf $[\tilde{p}\tilde{q}]$ liegt. Ist die Anzahl ungerade liegt der Punkt p im Polygon P. Ist die Anzahl gerade liegt p außerhalb von P.\\
 	Um echte Seitenwechsel zu identifizieren wird muss folgende Bedingung wahr sein:
 	\[ ccw(p_{i-1} , p_i, \tilde{p}) * ccw(p_{i-1} , p_i, \tilde{q}) \leq 0 \]
-	Zusätzlich muss der Fall abgedeckt werden das der Punkt p auf der Kante des Polygons liegt. Hierbei iteriert man einfach über alle Kanten $[p_n,q_n]$. \\
+	Zusätzlich muss der Fall abgedeckt werden das der Punkt p auf der Kante des Polygons liegt. Hierbei iteriert man einfach über alle Kanten $[p_n,q_n]$.\\
 	Die Abbildung \ref{PointInPoly} zeigt die wichtigsten Fälle die abgedeckt werden müssen.
 	\begin{figure}[h]
 		\begin{center}
