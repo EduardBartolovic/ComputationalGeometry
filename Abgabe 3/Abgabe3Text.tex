@@ -73,32 +73,37 @@
 	}
 	\end{lstlisting}
 	
-	Zu Beginn werden alle Start und Endpunkte aller Strecken $L_{InputStrecken}$ in eine EventQueue $Q$ eingefügt. Diese EventQueue ist eine PriorityQueue die intern die Events auf der x-Achse sortiert. Die PriorityQueue ist als ein Heap implementiert. Die Operationen besitzen deshalb auch die Komplexität:
+	Zu Beginn werden alle Start und Endpunkte aller Strecken $L_{InputStrecken}$ in eine EventQueue $Q_{Event}$ eingefügt. Diese EventQueue ist eine PriorityQueue die intern die Events auf der X-Achse und Eventtyp sortiert. \textit{START} Events haben bei gleichem X Wert Vorrang. \textit{END} Events sind immer zuletzt dran. Die PriorityQueue ist als ein Heap implementiert. Die Operationen besitzen deshalb auch die Komplexität \cite{b2}:
 	\begin{itemize}
 		\item add: $\mathcal{O}(log(n))$
 		\item poll: $\mathcal{O}(1)$
 	\end{itemize}
-	Die Datenstruktur für die Sweepline wird eine Map basierend auf einer Rot-Schwarz-Baum Implementierung verwendet. Dieser hat die Komplexität \cite{b1}:
+	Relevante Strecken liegen in der Sweepline $T_{Sweep}$.
+	Für die Sweepline $T_{Sweep}$ wird als Datenstruktur eine Baum basierend auf einer Rot-Schwarz-Baum Implementierung verwendet. Dieser hat die Komplexität \cite{b1}:
 	\begin{itemize}
 		\item add: $\mathcal{O}(log(n))$
 		\item remove: $\mathcal{O}(log(n))$
 		\item contains: $\mathcal{O}(log(n))$
 		\item get: $\mathcal{O}(log(n))$
 	\end{itemize}
-	Es gibt im regulären Bentley-Ottmann Algorithmus 3 Events(START,END,INTERSECTION).
-	Zu beginn liegen nur START und END Events in $Q$.\\
-	Nun wird nacheinander ein Event aus $Q$ genommen. Dieses Event wird je nach Typ behandelt.\\
-	Das Event START fügt das neue Segment $S_{new}$ in die Sweepline ein.
-	Es wird überprüft ob ein Segment über oder unter $S_{new}$ liegt. Sollte dies der Fall sein wird überprüft ob diese sich mit $S_{new}$ schneiden. Bei einem gefundenen Schnittpunkten wird ein neues INTERSECTION Event in $Q$ eingefügt.
+	Es gibt im regulären Bentley-Ottmann Algorithmus 3 Events (\textit{START}, \textit{END}, \textit{INTERSECTION}).
+	Zu beginn liegen nur \textit{START} und \textit{END} Events in $Q_{Event}$.\\
+	Nun wird nacheinander ein Event aus $Q_{Event}$ genommen. Dieses Event wird je nach Typ behandelt.\\
+	Das Event \textit{START} fügt das neue Segment $S_{new}$ in die Sweepline $T_{Sweep}$ ein.
+	Es wird überprüft ob ein Segment über oder unter $S_{new}$ liegt. Sollte dies der Fall sein wird überprüft ob diese sich mit $S_{new}$ schneiden. Bei einem gefundenen Schnittpunkten wird ein neues \textit{INTERSECTION} Event in $T_{Sweep}$ eingefügt.
 	\begin{lstlisting}[basicstyle=\tiny]
 	{}
 	\end{lstlisting}
-	Bei einem END Event endet ein Segment $S_{old}$. Es wird überprüft ob ein Segment über und unter $S_{old}$ liegt. Sollten diese existieren dann wird überprüft ob diese sich schneiden. Bei einem gefundenen Schnittpunkten wird ein neues INTERSECTION Event in $Q$ eingefügt. $S_{old}$ wird aus der Sweepline entfernt.
+	Bei einem \textit{END} Event endet ein Segment $S_{old}$. Es wird überprüft ob ein Segment über und unter $S_{old}$ liegt. Sollten diese existieren dann wird überprüft ob diese sich schneiden. Bei einem gefundenen Schnittpunkten wird ein neues \textit{INTERSECTION} Event in $Q_{Event}$ eingefügt. $S_{old}$ wird aus der Sweepline $T_{Sweep}$ entfernt.
 	\begin{lstlisting}[basicstyle=\tiny]
 		{}
 	\end{lstlisting}
-	Bei einem INTERSECTION Event......
-	
+	Bei einem \textit{INTERSECTION} Event......
+	\begin{lstlisting}[basicstyle=\tiny]
+		{}
+	\end{lstlisting}
+
+
 	\section{Schnittpunkt zwischen 2 Geraden }
 	Da es nicht reicht nur zu Wissen das zwei geraden einen Schnittpunkt haben sondern es auch nötig ist auch dessen genaue Position zu kennen musste ein neuer ALgortithmus entwickelt werden.\\
 	Hierfür wurde erstmal überprüft ob der Start- oder Endpunkt p1,q1 der Strecke s1 identisch zu einem der Punkt p2 oder q2 der Strecke s2 ist. Sollte dies der Fall sein wird direkt der gemeinsame Punkt zurückgegeben.\\
@@ -134,9 +139,9 @@
 
 
 	\section{Behandlung der Sonderfälle}
-	In meiner Implementierung wurde alle Sonderfälle behandelt.
+	In meiner Implementierung werden alle Sonderfälle behandelt.
 	\subsection{Nur echte Schnittpunkte}
-	Meine Implementierung unterstützt auch unechte Schnittpunkte. Hierfür wurde vor allem die Sweepline angepasst. So wird die gewöhnliche Sweepline Implementierung die nur aus einem Baum $SWEEP_{T}$ mit Strecken besteht mit einer Funktionalität ergänzt die ähnlich wie bei Buckets bei einem Hashset funktioniert. So wird bei START Events überprüft ob die Position des Startpunktes in $SWEEP_{T}$ bereits existiert. Sollte dies der Fall sein wird das Segment einfach zusätzlich in den Knoten eingefügt. Der Schlüssel der Knoten ist der aktuelle y-Wert.\\
+	Meine Implementierung unterstützt auch unechte Schnittpunkte. Hierfür wurde vor allem die Sweepline angepasst. So wird die gewöhnliche Sweepline Implementierung die nur aus einem Baum $T_{Sweep}$ mit Strecken besteht mit einer Funktionalität ergänzt die ähnlich wie bei Buckets bei einem Hashset funktioniert. So wird bei START Events überprüft ob die Position des Startpunktes in $T_{Sweep}$ bereits existiert. Sollte dies der Fall sein wird das Segment einfach zusätzlich in den Knoten eingefügt. Der Schlüssel der Knoten ist der aktuelle Y-Wert.\\
 	\begin{figure}[h!]
 		\begin{center}
 			\includegraphics[width=6cm]{BaumKollision.png}
@@ -144,15 +149,15 @@
 			\label{figure_collision}
 		\end{center}
 	\end{figure}\\
-	Leider müssen werden jedes mal wenn die Sweepline bewegt wird die Elemente in $SWEEP_{T}$ zu neu sortiert werden. Operationen auf $SWEEP_{T}$ laufen in $\mathcal{O}(n)$. 
+	Leider müssen werden jedes mal wenn die Sweepline bewegt wird die Elemente in $T_{Sweep}$ zu neu sortiert werden. Operationen auf $T_{Sweep}$ laufen in $\mathcal{O}(n)$. 
 	
 	\subsection{X-Koordinaten der Schnitt- und Endpunkte sind paarweise identisch}
 	Dieses Problem ist ein Teilproblem des vorherigen Problems und damit schon gelöst.
-	So wird beim einfügen neuer Strecken überprüft ob bereits andere Segmente an diesem Punkt liegen. Sollte dies der Fall sein werden wird dieser Punkt entsprechend der Anzahl der Segmente als Schnittpunkte in die Output Liste eingefügt. Außerdem immer wenn ein Schnittpunkt gefunden wird welcher direkt auf der Sweepline liegt wird dieser ohne ein INTERSECTION Event zu generieren der Outputliste hinzugefügt.
+	So wird beim einfügen neuer Strecken überprüft ob bereits andere Segmente an diesem Punkt liegen. Sollte dies der Fall sein werden wird dieser Punkt entsprechend der Anzahl der Segmente als Schnittpunkte in die Output Liste eingefügt. Außerdem immer wenn ein Schnittpunkt gefunden wird welcher direkt auf der Sweepline $T_{Sweep}$ liegt wird dieser ohne ein \textit{INTERSECTION} Event zu generieren der Outputliste hinzugefügt.
 	
 	\subsection{Linien parallel zur Y-Achse}
-	Für Linien die zur Y-Achse gehören wurden in ein neues VERTICALLINE Event erschaffen. So werden keine Startpunkt und Endpunkte in die Eventqueue eingefügt sondern nur das VERTICALLINE Event.
-	Vertikale Strecken schneiden sich mit allen Strecken die aktuell die Sweepline schneiden die zwischen dem Start und Endpunkt liegen. So muss nicht die gesamte Sweepline untersucht werden sondern nur ein Teil des Baumes.
+	Für Linien die zur Y-Achse gehören wurden in ein neues \textit{VERTICALLINE} Event erschaffen. So werden keine \textit{Start} und \textit{END} Event in die Eventqueue $Q_{Event}$ eingefügt sondern nur das \textit{VERTICALLINE} Event.
+	Vertikale Strecken schneiden sich mit allen Strecken, die aktuell die Sweepline zwischen dem Start- und Endpunkt der vertikalen Strecke schneiden. So muss nicht die gesamte Sweepline $T_{Sweep}$ untersucht werden sondern nur ein Teil des Baumes.
 	\begin{figure}[h]
 		\begin{center}
 			\includegraphics[width=6cm]{Vertikal.png}
@@ -160,17 +165,24 @@
 			\label{figure_3}
 		\end{center}
 	\end{figure}
-	Das gilt selbstverständlich auch für anderen Vertikalen Strecken an aktueller Stelle. Deshalb wird eine Vertikale Strecke auch an einem VERTICALLINE Event in die Sweepline eingefügt. Sie werden aber nicht in den Baum eingefügt sondern in eine separate Liste. Sobald die Sweepline verschoben wird werden alle vertikalen Strecken aus der Liste entfernt.
+	Das gilt selbstverständlich auch für anderen Vertikalen Strecken an aktueller X-Stelle. Deshalb wird eine vertikale Strecke auch an einem \textit{VERTICALLINE} Event in die Sweepline $T_{Sweep}$ eingefügt. Sie werden aber nicht in den Baum eingefügt sondern in eine separate Liste für vertikale Segmente. Sobald die Sweepline verschoben wird werden alle vertikalen Strecken aus der Liste entfernt.
 		
 	\subsection{Länge der Segmente gleich $0$}
-	Elemente der Länge 0 werden einfach als vertikale Linien behandelt.
+	Elemente der Länge 0 werden einfach als vertikale Segmente behandelt.
 	
 	\subsection{Mehrfachschnittpunkte}
-	Mehrfachschnittpunkte wurden behandelt. Hierfür wird die oben beschriebene Baumstruktur der Sweepline genutzt. So wird an einem INTERSECTION Event in der SweepLine gesucht ob an der Stelle weitere Segmente durchlaufen. Sollte dies der Fall sein wird werden direkt die korrekte menge an Schnittpunkten der Outputliste hinzugefügt.
+	Mehrfachschnittpunkte wurden behandelt. Hierfür wird die oben beschriebene Baumstruktur der Sweepline $T_{Sweep}$ genutzt. So wird an einem \textit{INTERSECTION} Event in der SweepLine gesucht ob an der Stelle weitere Segmente durchlaufen. Sollte dies der Fall sein wird werden direkt die korrekte menge an Schnittpunkten der Outputliste hinzugefügt. Wichtig ist aber das der Fall in der Abbildung \ref{Multi} betrachtet wird. Hier muss an dem Schnittpunkt der höchste und niedrigste Segment gefunden werden und mit den benachbarten Strecken abgeglichen werden.
+	\begin{figure}[h]
+		\begin{center}
+			\includegraphics[width=6cm]{MultiSchnitt.png}
+			\caption{Problemfälle mit überlappenden Elementen}
+			\label{Multi}
+		\end{center}
+	\end{figure}
 	
 	\subsection{Überlappende Segmente}
-	Auch dieses Problem ist auch ein Teilproblem der nur echten Schnittpunkte. Dies kann aber noch mehr Probleme bereiten als das nur Überlappungen in einzelnen Punkten. Die wichtigsten Fälle in Abbildung \ref{figure_collision}.
-	
+	Auch dieses Problem ist auch ein Teilproblem der nur echten Schnittpunkte. Dies kann aber noch mehr Probleme bereiten als das nur Überlappungen in einzelnen Punkten. Wichtig ist das die Funktion die Schnittpunkte zwischen 2 Strecken findet in der Lage ist trotz Überlappung einen Schnittpunkt findet. Da eigentlich überlappende Segmente unendlich viele Schnittpunkte hat wird einfach der untere linke Punkt gewählt.\\
+	Die wichtigsten Fälle in Abbildung \ref{figure_collision}:
 	\begin{figure}[h]
 		\begin{center}
 			\includegraphics[width=6cm]{ProblemUberlappen.png}
@@ -178,8 +190,16 @@
 			\label{figure_3}
 		\end{center}
 	\end{figure}
+	Schwierig ist vor allem der Fall 4. Hier muss am Endpunkt $q1$ der Schnittpunkt $q2/q3$ gefunden werden.
 	
 	\section{Komplexität}
+	Die Komplexität ist abhängig vom Input. So gibt es normalerweise $2n + k$ Events, wobei $n$ die Anzahl der Segmente und $k$ die Anzahl der Schnittpunkten entspricht. Wobei bei Sonderfälle die Anzahl geringer Ausfallen kann. Da bei vertikalen Strecken nur ein Punkt in die Eventqueue eingefügt wird. Das selbe gilt auch für Schnittpunkte die in einem Startpunkt liegen und keinen neuen Eintrag in die EventQueue bekommen. So gilt für $m$ nicht vertikale Strecken, $s$ Schnittpunkte ohne Überschneidungen mit anderen Events und $v$ vertikalen Strecken:
+	\[ 2n + k \geq 2m + s + v \]
+	Die Komplexität des Sortierens der Eventqueue beträgt $\mathcal{O}((2m+v)*log(2m+v))$ was trotzdem $\mathcal{O}(n*log(n))$ entspricht.\\
+	Operationen in die EventQueue und der Sweepline haben die Komplexität $\mathcal{O}(log(m))$. Allerdings wird bei jedem bewegen der Sweepline die Sweepline neu berechnet. Dies resultiert leider in $\mathcal{O}(m*log(m))$.\\
+	Zusammengefasst kann man den Aufwand wie folgt beschreiben:
+	\[\mathcal{O}(m*log(m)) + m*\mathcal{O}(m*log(m)) \]
+	
 	
 	\section{Performance}
 	
@@ -210,10 +230,9 @@
 
 	Auch noch test mit 4Kerner?
 
-	Wieso länger bei weniger Schnitt wegen voller Y-Struktur vereinzelte Same wegen sonderfälle
 	
 	\section{Durchschnittliche Sweeplinegröße}
-	Die durchschnittliche Füllgrad der Sweepline beeinflusst die Performance.
+	Die durchschnittliche Füllgrad und die Anzahl der Verschiebungen der Sweepline beeinflusst die Performance maßgeblich. Die Anzahl der Schnittpunkte beeinflusst meistens auch die Anzahl der Verschiebungen der Sweepline. Dies kann man gut sehen wenn man die Zeiten in der oberen Tabelle mit der Abbildung \ref{fullstand} vergleicht. 
 
 	\begin{figure}[!tbp]
 		\centering
@@ -233,11 +252,12 @@
 			\includegraphics[width=\textwidth]{s100000+1.png}
 		\end{minipage}
 		\caption{Füllstand der Sweepline über die Zeit}
+		\label{fullstand}
 	\end{figure}
 	
 	\begin{thebibliography}{00}
+		\bibitem{b2}https://docs.oracle.com/javase/8/docs/api/java/util/PriorityQueue.html
 		\bibitem{b1}https://docs.oracle.com/javase/7/docs/api/java/util/TreeMap.html
-		\bibitem{b2}http://www.dcs.gla.ac.uk/~pat/52233/slides/Geometry1x1.pdf
 	\end{thebibliography}
 	
 	

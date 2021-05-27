@@ -171,8 +171,10 @@ for(int m = 0 ; m < size-1 ; m++){
 Bei jedem äußeren Schleifendurchgang spart man sich einen weiteren inneren Durchlauf.
 Man kann die Anzahl der Durchläufe mit der Gaußschen Summenformel beschreiben:
 \[ \sum_{k=1}^{n} k = 1+2+3+4+5+...+n = (n^2 + n) / 2 \]
+Der letzte Durchlauf kann weggelassen werden:
+\[ \sum_{k=1}^{n-1} k = 1+2+3+4+5+...+(n-1) = (n^2 - n) / 2 \]
 Es sollte gelten:
-\[ \mathcal{O}(n^2) \geq \mathcal{O}(\frac{(n^2 + n)}{2}) \]
+\[ \mathcal{O}(n^2) \geq \mathcal{O}(\frac{(n^2 - n)}{2}) \]
 Beide liegen aber noch immer in der gleichen Komplexitätsklasse $\mathcal{O}(n^2)$.
 
 \subsection{Parallelisierung}
