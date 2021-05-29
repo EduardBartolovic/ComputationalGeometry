@@ -108,6 +108,7 @@
 	Da es nicht reicht nur zu Wissen das zwei geraden einen Schnittpunkt haben sondern es auch nötig ist auch dessen genaue Position zu kennen musste ein neuer ALgortithmus entwickelt werden.\\
 	Hierfür wurde erstmal überprüft ob der Start- oder Endpunkt p1,q1 der Strecke s1 identisch zu einem der Punkt p2 oder q2 der Strecke s2 ist. Sollte dies der Fall sein wird direkt der gemeinsame Punkt zurückgegeben.\\
 	Nun werden die beiden Strecken als Geraden behandelt. So kann man mit der Geradengleichung den Schnittpunkt der zwei Geraden berechnen.\\
+	\[  \]
 	Es besteht die Möglichkeit das der Schnittpunkt S nicht existiert da beide Geraden parallel zu einander sind. In diesem Fall wären wären x und y von S unendlich. In diesem Fall wird ein Optional.empty() zurückgegeben.
 	Da der Schnittpunkt S über die Geradengleichung berechnet worden ist kann es sein das dieser sich auf den Geraden von s1 und s2 befindet aber nicht auf der Strecke s1 oder s2. Deshalb muss überprüft werden ob sich der Punkt in der Bounding Box der beiden Strecken befindet. Sollte dies bei beiden der Fall sein dann ist dies der korrekte Schnittpunkt.\\
 	Um numerische Fehler zu reduzieren wird bei Horizontalen und Verticalen Strecken ....
@@ -149,7 +150,7 @@
 			\label{figure_collision}
 		\end{center}
 	\end{figure}\\
-	Leider müssen werden jedes mal wenn die Sweepline bewegt wird die Elemente in $T_{Sweep}$ zu neu sortiert werden. Operationen auf $T_{Sweep}$ laufen in $\mathcal{O}(n)$. 
+	Leider müssen werden jedes mal wenn die Sweepline bewegt wird die Elemente in $T_{Sweep}$ zu neu sortiert werden. Operationen auf $T_{Sweep}$ laufen in $\mathcal{O}(n)$. Theoretisch müsste es möglich sein dies zu vermeiden in dem immer nur die Nachbar verglichen werden. Dies ist aber sehr komplex da bei Neusortierungen die Buckets mit neu sortiert werden müssen.
 	
 	\subsection{X-Koordinaten der Schnitt- und Endpunkte sind paarweise identisch}
 	Dieses Problem ist ein Teilproblem des vorherigen Problems und damit schon gelöst.
@@ -157,7 +158,7 @@
 	
 	\subsection{Linien parallel zur Y-Achse}
 	Für Linien die zur Y-Achse gehören wurden in ein neues \textit{VERTICALLINE} Event erschaffen. So werden keine \textit{Start} und \textit{END} Event in die Eventqueue $Q_{Event}$ eingefügt sondern nur das \textit{VERTICALLINE} Event.
-	Vertikale Strecken schneiden sich mit allen Strecken, die aktuell die Sweepline zwischen dem Start- und Endpunkt der vertikalen Strecke schneiden. So muss nicht die gesamte Sweepline $T_{Sweep}$ untersucht werden sondern nur ein Teil des Baumes.
+	Vertikale Strecken schneiden sich mit allen Strecken, die aktuell die Sweepline zwischen dem Start- und Endpunkt der vertikalen Strecke schneiden. So muss nicht die gesamte Sweepline $T_{Sweep}$ untersucht werden sondern nur ein Teilbaum.
 	\begin{figure}[h]
 		\begin{center}
 			\includegraphics[width=6cm]{Vertikal.png}
@@ -182,16 +183,25 @@
 	
 	\subsection{Überlappende Segmente}
 	Auch dieses Problem ist auch ein Teilproblem der nur echten Schnittpunkte. Dies kann aber noch mehr Probleme bereiten als das nur Überlappungen in einzelnen Punkten. Wichtig ist das die Funktion die Schnittpunkte zwischen 2 Strecken findet in der Lage ist trotz Überlappung einen Schnittpunkt findet. Da eigentlich überlappende Segmente unendlich viele Schnittpunkte hat wird einfach der untere linke Punkt gewählt.\\
-	Die wichtigsten Fälle in Abbildung \ref{figure_collision}:
+	Die wichtigsten Fälle sind in Abbildung \ref{figure_collision} abgebildet:
 	\begin{figure}[h]
 		\begin{center}
 			\includegraphics[width=6cm]{ProblemUberlappen.png}
 			\caption{Problemfälle mit überlappenden Elementen}
 			\label{figure_3}
 		\end{center}
-	\end{figure}
-	Schwierig ist vor allem der Fall 4. Hier muss am Endpunkt $q1$ der Schnittpunkt $q2/q3$ gefunden werden.
+	\end{figure}\\
+	Schwierig ist vor allem der Fall 4. Hier muss am Startpunkt $p3$ der Schnittpunkt $q2/q3$ gefunden werden. Dazu müssen die Strecken 1 und 2 welche beide gleich weit unter Strecke 3 liegen überprüft werden.
 	
+	\section{Genauigkeit}
+	Ein Problem des Bentley Ottmann Verfahrens ist es das Schnittpunkte die sehr nah aneinander liegen Probleme verursachen können. Wichtig ist das die Berechnungen eine hohe Genauigkeit aufweisen. So liegen Schnittpunkte teilweise nur 4 Nachkommastellen auseinander.
+	\begin{figure}[h]
+		\begin{center}
+			\includegraphics[width=6cm]{CloseIntersections.png}
+			\caption{Sehr nah liegende Schnittpunkte}
+			\label{figure_3}
+		\end{center}
+	\end{figure}\\
 	\section{Komplexität}
 	Die Komplexität ist abhängig vom Input. So gibt es normalerweise $2n + k$ Events, wobei $n$ die Anzahl der Segmente und $k$ die Anzahl der Schnittpunkten entspricht. Wobei bei Sonderfälle die Anzahl geringer Ausfallen kann. Da bei vertikalen Strecken nur ein Punkt in die Eventqueue eingefügt wird. Das selbe gilt auch für Schnittpunkte die in einem Startpunkt liegen und keinen neuen Eintrag in die EventQueue bekommen. So gilt für $m$ nicht vertikale Strecken, $s$ Schnittpunkte ohne Überschneidungen mit anderen Events und $v$ vertikalen Strecken:
 	\[ 2n + k \geq 2m + s + v \]
@@ -200,6 +210,7 @@
 	Zusammengefasst kann man den Aufwand wie folgt beschreiben:
 	\[\mathcal{O}(m*log(m)) + m*\mathcal{O}(m*log(m)) \]
 	
+	\newpage
 	
 	\section{Performance}
 	
@@ -210,7 +221,7 @@
 		\item \textbf{BF P L:} BruteForce, MultiThread, Liste von Schnittpunkten
 		\item \textbf{BO:} Bentley-Ottmann, Liste von Schnittpunkten
 	\end{enumerate}
-
+     
 	\begin{table}
 		\small
 		\begin{tabular}{|c|c|c|c|c|c|c|}
@@ -226,6 +237,7 @@
 			s\_100000\_1 & 111624 & 121718 & 8712 & 8825 & 45893\\%37363
 			\hline
 		\end{tabular}
+	    \caption{Laufzeiten der Algorithmen}
 	\end{table}
 
 	Auch noch test mit 4Kerner?
