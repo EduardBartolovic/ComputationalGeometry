@@ -51,27 +51,6 @@
 	\end{abstract}
 	
 	\section{Basis Bentley-Ottmann Algorithmus}
-	PSEUDOCODE
-	\begin{lstlisting}[basicstyle=\tiny]
-	public double calculateArea(){
-	double sum = 0;
-	for(Polygon p : areas){
-	boolean isInside = false;
-	for(Polygon p2 : areas){
-	//Check if Hole
-	if(!p.equals(p2) && p.isPolygonInside(p2) ){ 
-	isInside = true;
-	break;
-	}   
-	}
-	if(isInside)
-	sum -= Math.abs(p.calculateArea());
-	else
-	sum += Math.abs(p.calculateArea());
-	}
-	return sum;
-	}
-	\end{lstlisting}
 	
 	Zu Beginn werden alle Start und Endpunkte aller Strecken $L_{InputStrecken}$ in eine EventQueue $Q_{Event}$ eingefügt. Diese EventQueue ist eine PriorityQueue die intern die Events auf der X-Achse und Eventtyp sortiert. \textit{START} Events haben bei gleichem X Wert Vorrang. \textit{END} Events sind immer zuletzt dran. Die PriorityQueue ist als ein Heap implementiert. Die Operationen besitzen deshalb auch die Komplexität \cite{b2}:
 	\begin{itemize}
@@ -90,29 +69,19 @@
 	Zu beginn liegen nur \textit{START} und \textit{END} Events in $Q_{Event}$.\\
 	Nun wird nacheinander ein Event aus $Q_{Event}$ genommen. Dieses Event wird je nach Typ behandelt.\\
 	Das Event \textit{START} fügt das neue Segment $S_{new}$ in die Sweepline $T_{Sweep}$ ein.
-	Es wird überprüft ob ein Segment über oder unter $S_{new}$ liegt. Sollte dies der Fall sein wird überprüft ob diese sich mit $S_{new}$ schneiden. Bei einem gefundenen Schnittpunkten wird ein neues \textit{INTERSECTION} Event in $T_{Sweep}$ eingefügt.
-	\begin{lstlisting}[basicstyle=\tiny]
-	{}
-	\end{lstlisting}
-	Bei einem \textit{END} Event endet ein Segment $S_{old}$. Es wird überprüft ob ein Segment über und unter $S_{old}$ liegt. Sollten diese existieren dann wird überprüft ob diese sich schneiden. Bei einem gefundenen Schnittpunkten wird ein neues \textit{INTERSECTION} Event in $Q_{Event}$ eingefügt. $S_{old}$ wird aus der Sweepline $T_{Sweep}$ entfernt.
-	\begin{lstlisting}[basicstyle=\tiny]
-		{}
-	\end{lstlisting}
-	Bei einem \textit{INTERSECTION} Event......
-	\begin{lstlisting}[basicstyle=\tiny]
-		{}
-	\end{lstlisting}
-
+	Es wird überprüft ob ein Segment über oder unter $S_{new}$ liegt. Sollte dies der Fall sein wird überprüft ob diese sich mit $S_{new}$ schneiden. Bei einem gefundenen Schnittpunkten wird ein neues \textit{INTERSECTION} Event in $T_{Sweep}$ eingefügt.\\
+	Bei einem \textit{END} Event endet ein Segment $S_{old}$. Es wird überprüft ob ein Segment über und unter $S_{old}$ liegt. Sollten diese existieren dann wird überprüft ob diese sich schneiden. Bei einem gefundenen Schnittpunkten wird ein neues \textit{INTERSECTION} Event in $Q_{Event}$ eingefügt. $S_{old}$ wird aus der Sweepline $T_{Sweep}$ entfernt.\\
+	Bei einem \textit{INTERSECTION} Event schneiden sich die zwei Segmente s und t. Dabei werden die Positionen von s und t in $T_{Sweep}$ getauscht. Nach dem werden die Segmente r und u, die möglicherweise unmittelbar unter bzw. über t und s liegen nach Schnittpunkten untersucht. Gefundene Schnittpunkte werden der Ereigniswarteschlange hinzugefügt.
 
 	\section{Schnittpunkt zwischen 2 Geraden }
-	Da es nicht reicht nur zu Wissen das zwei geraden einen Schnittpunkt haben sondern es auch nötig ist auch dessen genaue Position zu kennen musste ein neuer ALgortithmus entwickelt werden.\\
+	Da es nicht reicht nur zu Wissen das zwei geraden einen Schnittpunkt haben sondern es auch nötig ist auch dessen genaue Position zu kennen musste ein neuer Algortithmus entwickelt werden.\\
 	Hierfür wurde erstmal überprüft ob der Start- oder Endpunkt p1,q1 der Strecke s1 identisch zu einem der Punkt p2 oder q2 der Strecke s2 ist. Sollte dies der Fall sein wird direkt der gemeinsame Punkt zurückgegeben.\\
 	Nun werden die beiden Strecken als Geraden behandelt. So kann man mit der Geradengleichung den Schnittpunkt der zwei Geraden berechnen.\\
 	\[  \]
 	Es besteht die Möglichkeit das der Schnittpunkt S nicht existiert da beide Geraden parallel zu einander sind. In diesem Fall wären wären x und y von S unendlich. In diesem Fall wird ein Optional.empty() zurückgegeben.
 	Da der Schnittpunkt S über die Geradengleichung berechnet worden ist kann es sein das dieser sich auf den Geraden von s1 und s2 befindet aber nicht auf der Strecke s1 oder s2. Deshalb muss überprüft werden ob sich der Punkt in der Bounding Box der beiden Strecken befindet. Sollte dies bei beiden der Fall sein dann ist dies der korrekte Schnittpunkt.\\
-	Um numerische Fehler zu reduzieren wird bei Horizontalen und Verticalen Strecken ....
-	
+	Um numerische Fehler zu reduzieren wird bei Horizontalen und Vertikalen Strecken ....
+	++++++++++++++++++++++++++
 	\section{Probleme für den Algoritmus}
 	Der Algorithmus hat Probleme wenn folgende Voraussetzungen nicht erfüllt sind:
 	\begin{enumerate}
@@ -150,7 +119,7 @@
 			\label{figure_collision}
 		\end{center}
 	\end{figure}\\
-	Leider müssen werden jedes mal wenn die Sweepline bewegt wird die Elemente in $T_{Sweep}$ zu neu sortiert werden. Operationen auf $T_{Sweep}$ laufen in $\mathcal{O}(n)$. Theoretisch müsste es möglich sein dies zu vermeiden in dem immer nur die Nachbar verglichen werden. Dies ist aber sehr komplex da bei Neusortierungen die Buckets mit neu sortiert werden müssen.
+	Leider müssen werden jedes mal wenn die Sweepline bewegt wird die Elemente in $T_{Sweep}$ zu neu sortiert werden. $T_{Sweep}$ neu zu sortieren bedarf $\mathcal{O}(n*log(n))$. Theoretisch müsste es möglich sein dies zu vermeiden in dem immer nur die Nachbar verglichen werden. Dies ist aber sehr komplex da bei Neusortierungen die Buckets mit neu sortiert werden müssen. Ich bin überzeugt das es auch ohne kompletter Neusortierung gehen müsste. Der Aufwand dafür ist aber extrem hoch. Es reicht nicht aus immer nur die direkten Nachbarn zu betrachten da potentiell weiter entfernte Strecken auch noch in Betracht kommen können. Deshalb muss neben den direkten Nachbarn noch weiter überprüft werden bis man sicher gehen kann das diese sich nicht schneiden können.
 	
 	\subsection{X-Koordinaten der Schnitt- und Endpunkte sind paarweise identisch}
 	Dieses Problem ist ein Teilproblem des vorherigen Problems und damit schon gelöst.
