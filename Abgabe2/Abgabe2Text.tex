@@ -45,10 +45,8 @@
 	
 	\maketitle
 	
-	\begin{abstract}
-		
-		
-	\end{abstract}
+	%\begin{abstract}	
+	%\end{abstract}
 	
 	\section{Berechnung des Flächeninhalts von einem Dreieck}
 	Für die Berechnung der Fläche eines Dreiecks wird die Formel verwendet:
@@ -87,7 +85,7 @@
 	\[ = \frac{1}{2} \underbrace{\sum_{i=2}^{n+1}(x_{i-1}*y_i)}_{\substack{ = \sum_{i=1}^{n}(x_{i-1}*y_{i})  \text{, da } y_{n+1}=y_i \text{ und } x_0=x_n}} - \frac{1}{2}\sum_{i=1}^{n}(y_i*x_{i+1})\]
 	\[ = \frac{1}{2} \sum_{i=1}^{n}(x_{i-1}*y_{i}) - \frac{1}{2}\sum_{i=1}^{n}(y_i*x_{i+1})\]
 	\[ = \frac{1}{2}\sum_{i=1}^{n}(x_{i-1}*y_{i}-y_{i}*x_{i+1})\]
-	\[ A= \frac{1}{2}\sum_{i=1}^{n} y_i(x_{i-1}-x_{i+1})\]
+	\[ A = \frac{1}{2}\sum_{i=1}^{n} y_i(x_{i-1}-x_{i+1})\]
 	Wenn die Eckpunkte gegen den Uhrzeigersinn definiert sind dann ist die Fläche positiv. Im Uhrzeigersinn ist die Fläche negativ.
 	
 	

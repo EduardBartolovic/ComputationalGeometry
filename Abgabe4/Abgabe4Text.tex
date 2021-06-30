@@ -45,64 +45,77 @@
 	
 	\maketitle
 	
-	\begin{abstract}
-		
-		
-	\end{abstract}
 	
+%\begin{abstract}	
+%\end{abstract}
+
 	\section{Konvexe Hülle}
-	 N*logN Quickhull mit Worstcase $n^2$
+	Für die Berechnung der Konvexe Hülle wurde das Programm \textit{qhull} \cite{b2} verwendet. \textit{qhull} verwendet den Quickhull Algorithmus um die Konvexe Hülle zu berechnen. \textit{qhull} lässt sich per Kommandozeile ansprechen. Ein Beispiels für einen Aufruf:
+	\begin{lstlisting}[basicstyle=\tiny]
+	rbox 3 D2 | qconvex s o TO result
+	\end{lstlisting}
+	Der Befehl \textit{rbox} generiert eine gewisse Anzahl an Punkten in einer definierten Dimension. Der Befehl \textit{qconvex} berechnet die Konvexe Hülle. Mit einer Pipe können die Punkte direkt \textit{qconvex} übergeben werden.\\
+	Es wurden verschiedene Untersuchungen durchgeführt.\\
 	
-	Höher: 
 	
-	Eine symmetrische Anordnung der Punkte besitzt jedoch eine höhere Wahrscheinlichkeit die Best Case (bester Fall) Laufzeitschranke von $\mathcal{O}(n * \log(n))$ zu verlassen und deutlich langsamer zu sein. 
-	%Quickhull is a method of computing the convex hull of a finite set of points in n-dimensional %space. It uses a divide and conquer approach similar to that of quicksort, from which its name %derives. Its worst case complexity for 2-dimensional and 3-dimensional space is considered to be %O ( n log ⁡ ( r ) ) {\displaystyle O(n\log(r))} {\displaystyle O(n\log(r))}, where n %{\displaystyle n} n is the number of input points and r {\displaystyle r} r is the number of %processed points.[1] However, unlike quicksort, there is no obvious way to convert quickhull %into a randomized algorithm. Nevertheless, there exist works from Smoothed Analysis which tell %us that the 2-dimensional Quick hull algorithm has expected runtime O ( n log ⁡ ( n ) ) %{\displaystyle O(n\log(n))} O(n\log(n))
-	
+	++++++++++++
+	1 Punkt mehr als Dimensionen nötig
+	+++++++
+
+	\textbf{Laufzeit von \textit{qhull}}
+	Es wurde die Laufzeit von \textit{qhull} untersucht. Hierbei wurden verschiedene Konfiguration bezüglich Anzahl und Dimension getestet. Um den Einfluss von Ausreißern zu reduzieren wurde das mittel aus fünf Durchläufen gebildet.\\
+	Die Ergebnisse sind in den beiden Abbildungen \ref{figure_1} und \ref{figure_2} zu sehen.
 	\begin{figure}[h]
 		\begin{center}
-			\includegraphics[width=6cm]{index.png}
-			\caption{Normal}
+			\includegraphics[width=7cm]{index.png}
+			\caption{Messung der Laufzeit abhängig zur Anzahl der Punkte und Dimensionen}
 			\label{figure_1}
 		\end{center}
 	\end{figure}
 	\begin{figure}[h]
 		\begin{center}
-			\includegraphics[width=6cm]{index2.png}
-			\caption{X As log scale}
+			\includegraphics[width=7cm]{index2.png}
+			\caption{Messung der Laufzeit abhängig zur Anzahl der Punkte und Dimensionen (X-Achse ist Log Skalierung)}
 			\label{figure_2}
 		\end{center}
-	\end{figure}
+	\end{figure}\\
+	Wie gut in den Messungen zu sehen ist steigt der Aufwand mit Anzahl der Punkte und Dimensionen.
+	Die gemessenen Laufzeitsteigerungen entsprechen grob der Komplexität $\mathcal{O}(n * \log(n))$???????.\\
+	Dies entspricht auch dem Best Case Szenario von Quickhull. 
+	Quickhull nutzt einen Divide and Conquer Ansatz um das Problem zu lösen. Im Zwei- und Dreidimensionalen besitzt das Verfahren eine Komplexität von $\mathcal{O}(n * \log(r))$ wobei n die Anzahl der Input Punkten entspricht und r die Anzahl der betrachteten Punkte.
+	Im Zweidimensionalen hat Quickhull im Durchschnitt eine Komplexität bei zufälligen Punkten von $\mathcal{O}(n * \log(n))$.\\
+
+
++++++
+N*logN Quickhull mit Worstcase $n^2$
+
+Höher: 
+
+Eine symmetrische Anordnung der Punkte besitzt jedoch eine höhere Wahrscheinlichkeit die Best Case (bester Fall) Laufzeitschranke von $\mathcal{O}(n * \log(n))$ zu verlassen und deutlich langsamer zu sein.
+ 
+%Quickhull is a method of computing the convex hull of a finite set of points in n-dimensional %space. It uses a divide and conquer approach similar to that of quicksort, from which its name %derives. Its worst case complexity for 2-dimensional and 3-dimensional space is considered to be %O ( n log ⁡ ( r ) ), where n %{\displaystyle n} n is the number of input points and r {\displaystyle r} r is the number of %processed points.[1] However, unlike quicksort, there is no obvious way to convert quickhull %into a randomized algorithm. Nevertheless, there exist works from Smoothed Analysis which tell %us that the 2-dimensional Quick hull algorithm has expected runtime O ( n log ⁡ ( n ) ) %{\displaystyle O(n\log(n))} O(n\log(n))
 	
 	
 	\begin{thebibliography}{00}
-		\bibitem{b2}https://docs.oracle.com/javase/8/docs/api/java/util/PriorityQueue.html
-		\bibitem{b1}https://docs.oracle.com/javase/7/docs/api/java/util/TreeMap.html
+		\bibitem{b2} http://www.qhull.org/html/qconvex.htm
 	\end{thebibliography}
 	
 	
 	
 	\section{Anhang}
 
-	Berechnung der Fläche eines Bundeslandes:
+	Batchfile zum Testen der Laufzeit von Q-Hull:
 	\begin{lstlisting}[basicstyle=\tiny]
-	public double calculateArea(){
-		double sum = 0;
-		for(Polygon p : areas){
-			boolean isInside = false;
-			for(Polygon p2 : areas){
-				//Check if Hole
-				if(!p.equals(p2) && p.isPolygonInside(p2) ){ 
-					isInside = true;
-					break;
-				}   
-			}
-			if(isInside)
-				sum -= Math.abs(p.calculateArea());
-			else
-				sum += Math.abs(p.calculateArea());
-		}
-		return sum;
-	}
+	rbox 5000000 D2 | qconvex s o TO result
+	rbox 5000000 D2 | qconvex s o TO result
+	rbox 5000000 D2 | qconvex s o TO result
+	rbox 5000000 D2 | qconvex s o TO result
+	rbox 5000000 D2 | qconvex s o TO result
+	rbox 5000000 D2 | qconvex s o TO result
+	rbox 5000000 D2 | qconvex s o TO result
+	rbox 5000000 D2 | qconvex s o TO result
+	rbox 5000000 D2 | qconvex s o TO result
+	rbox 5000000 D2 | qconvex s o TO result
 	\end{lstlisting}	
 
 \end{document}

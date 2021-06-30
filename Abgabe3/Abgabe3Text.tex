@@ -45,11 +45,9 @@
 	
 	\maketitle
 	
-	\begin{abstract}
-		
-		
-	\end{abstract}
-	
+	%\begin{abstract}	
+	%\end{abstract}
+
 	\section{Basis Bentley-Ottmann Algorithmus}
 	
 	Zu Beginn werden alle Start und Endpunkte aller Strecken $L_{InputStrecken}$ in eine EventQueue $Q_{Event}$ eingefügt. Diese EventQueue ist eine PriorityQueue die intern die Events auf der X-Achse und Eventtyp sortiert. \textit{START} Events haben bei gleichem X Wert Vorrang. \textit{END} Events sind immer zuletzt dran. Die PriorityQueue ist als ein Heap implementiert. Die Operationen besitzen deshalb auch die Komplexität \cite{b2}:
