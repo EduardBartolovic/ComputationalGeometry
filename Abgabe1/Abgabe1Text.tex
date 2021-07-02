@@ -153,8 +153,8 @@ Um Fehler bei Berechnungen mit Double Werten auszugleichen wurde ein kleiner Thr
 \section{Laufzeitverbesserung des Algorithmus}
 Um die Laufzeit des Programm's zu verbessern wurden zwei Wege untersucht.
 \subsection{Optimierung der Komplexität des Algorithmus}
-Ein naiver Ansatz würde alle Strecken jeweils zweimal vergleichen. So würde mit zwei \textit{for-Schleifen} einmal AB verglichen werden und später nochmal BA. Ein Vergleich einer Strecke mit sich selbst wird nicht durchgeführt da diese sich ohnehin schneiden. Diese Methode würde in einer Komplexität von $\mathcal{O}(n^2-n)$ resultieren.\\
-Hier gibt es Verbesserungspotential. So kann man die 2 \textit{for-Schleife} mit dem aktuellen Index der äußeren Schleife um Eins erhöht beginnen lassen. Den letzten äußeren Schleifendurchgang kann man sich sparen da hier bereits alle Segmente verglichen wurden.
+Ein naiver Ansatz würde alle Strecken jeweils zweimal vergleichen. So würde mit zwei \textit{for-Schleifen} einmal zwei Strecken AB verglichen werden und später nochmal BA. Ein Vergleich einer Strecke mit sich selbst wird nicht durchgeführt da diese sich ohnehin schneiden.\\
+Hier gibt es Verbesserungspotential. So kann man die zweite \textit{for-Schleife} mit dem aktuellen Index der äußeren Schleife um Eins erhöht beginnen lassen. Den letzten äußeren Schleifendurchgang kann man sich ebenfalls sparen da hier bereits alle Segmente verglichen wurden.
 \begin{lstlisting}
 int counter = 0;
 for(int m = 0 ; m < size-1 ; m++){
@@ -172,20 +172,23 @@ Der letzte Durchlauf kann weggelassen werden:
 \[ \sum_{k=1}^{n-1} k = 1+2+3+4+5+...+(n-1) = (n^2 - n) / 2 \]
 Es sollte gelten:
 \[ \mathcal{O}(n^2) \geq \mathcal{O}(\frac{(n^2 - n)}{2}) \]
-Beide liegen aber noch immer in der gleichen Komplexitätsklasse $\mathcal{O}(n^2)$.
+Selbst nach dieser Optimierung liegt das Problem noch immer in der gleichen Komplexitätsklasse $\mathcal{O}(n^2)$.
 
 \subsection{Parallelisierung}
 Um die Laufzeit noch weiter zu verbessern wurde eine Parallelisierung untersucht.\\
-Hierbei konnte man ganz einfach den Code parallelisieren indem man Vorteile der Funktionalen Programmierung nutzt. Es werden einfach die gesamte Menge der zu vergleichenden Strecken auf m Kerne verteilt. Die Ergebnisse der einzelnen Threads werden zusammenaddiert. Der Zeitliche Bedarf reduziert sich bei größeren Problemen zunehmend. Bei kleinen Problemen lohnt sich die Parallelisierung wegen des Overheads nicht.\\
-\begin{tabular}{|c|c|c|}
+Hierbei konnte man ganz einfach den Code parallelisieren indem man Vorteile der Funktionalen Programmierung nutzt. Es werden einfach die gesamte Menge der zu vergleichenden Strecken auf m Kerne verteilt. Die Ergebnisse der einzelnen Threads werden zusammenaddiert. Der Anteil des sinkt bei größeren Problemen zunehmend. Bei kleinen Problemen lohnt sich die Parallelisierung wegen des großen Overheads nicht. Getestet wurde auf auf einem 6 Kern Prozessor mit Hyperthreading. Erwartungsgemäß erhaltet man einen Speedup von etwa 8 bei größeren Problemen wo der Overhead keine große Rolle mehr spielt.\\
+\\
+\begin{tabular}{|c|c|c|c|}
 	\hline
-	Datei & Single & Parallelisiert \\
+	Datei & Single & Parallelisiert & Speedup\\
 	\hline
-	s\_1000\_1.dat &  &  \\
+	s\_1000\_10.dat & 64 & 153 & 0.42 \\
 	\hline
-	s\_10000\_1.dat &  &  \\
+	s\_1000\_1.dat & 22 & 29 & 0.76\\
 	\hline
-	s\_100000\_1.dat &  &  \\
+	s\_10000\_1.dat & 1509 & 188 & 8.02\\
+	\hline
+	s\_100000\_1.dat & 127037 & 15713 &  8.01\\
 	\hline
 \end{tabular}
 \begin{thebibliography}{00}
