@@ -17,16 +17,16 @@
 \definecolor{pred}{rgb}{0.9,0,0}
 \definecolor{pgrey}{rgb}{0.46,0.45,0.48}
 \lstset{language=Java,
-	showspaces=false,
-	showtabs=false,
-	breaklines=true,
-	tabsize=2,
-	showstringspaces=false,
-	breakatwhitespace=true,
-	commentstyle=\color{pgreen},
-	keywordstyle=\color{pblue},
-	stringstyle=\color{pred},
-	basicstyle=\ttfamily
+showspaces=false,
+showtabs=false,
+breaklines=true,
+tabsize=2,
+showstringspaces=false,
+breakatwhitespace=true,
+commentstyle=\color{pgreen},
+keywordstyle=\color{pblue},
+stringstyle=\color{pred},
+basicstyle=\ttfamily
 }
 
 
@@ -86,41 +86,61 @@
 	\[ \vec{c}\vec{x} = c_1x_1 + c_2x_2+ ... + c_nx_n \]
 	maximiert.
 	Das Optimierungsproblem kann so dargestellt werden:
-	\[ \text{max}\{\vec{c}\vec{x} | Ax \leq b, x \geq 0\} \]
-	\cite{b2}
+	\[ \text{max}\{\vec{c}\vec{x} | A\vec{x} \leq b, \vec{x} \geq 0\} \]
+	\cite{b2}\\
 	Unser Vektor $\vec{x}$ enthält den Mittelpunkt und Radius des Inkreises:
 	\[ \vec{x} = \left(\begin{array}{c}x\\y\\r\end{array}\right) \]
-	Die Zielfunktion ist:
-	\[ \vec{c}\vec{x} = c_1*x+c_2*y+c_3*r = -r \]
-	-r??????????0 0 -1????????????????????????\\
-	Der Ergebnisraum wird durch die Nebenbedingungen, die durch die Kanten des Polygons definiert werden. Bei n Kanten gibt es die n Nebenbedingungen. Für die Kante $g_n$ entsteht die Ungleichung:
-	\[ d(\left(\begin{array}{c}x\\y\end{array}\right), g_n) \geq r \]
-	Dies kann umformuliert werden:
-	\[ d(\left(\begin{array}{c}x\\y\end{array}\right), g_n) = \vec{c}\vec{x}+a \]
-	\[ c_1 *x + c_2 *y - a \geq r \]
-	\[ c_1 *x + c_2 *y - r \geq a \]
-	\[ -c_1 *x - c_2 *y + r \leq -a \]
-	Um auf $c_1$ und $c_2$ ist wie folgt definiert:\\
-	
-	\[ c_1 = \frac{p_2}{\sqrt{p_1^2+p_2^2}} \]
-	\[ c_1 = \frac{-p_1}{\sqrt{p_1^2+p_2^2}} \]
-	
-	$p_1$ und $p_2$ ist der Vektor der der Kante entspricht.\\
+	Die Basiszielfunktion ist:
+	\[\max \vec{c}\vec{x} = c_1*x+c_2*y+c_3*r \]
+	Da wir aber nicht die Koordinaten maximieren wollen sondern nur den Radius können wir die Zielfunktion stark vereinfachen:
+	\[ \max \vec{c}\vec{x} = 0*x+0*y+1*r = r \]
+	\textit{linprog} findet nun das Minimum. Deshalb muss die Zielfunktion muss noch negiert werden weil das Maximum benötigt wird.\\
+	\[ \min \vec{c}\vec{x} = 0*x+0*y-1*r = -r \]
+	Der Ergebnisraum wird durch die Nebenbedingungen beschränkt, die jeweils durch die Kanten des Polygons definiert werden. So darf der Abstand zwischen dem Zentrum und der Kante nicht größer als der Radius sein. Bei n Kanten gibt es die n Nebenbedingungen. Für die Kante $g_n$ entsteht die Ungleichung:
+	\[  r \leq d(\left(\begin{array}{c}x\\y\end{array}\right), g_n) \]
+	\[  r \leq n_1 * x + n_2 * y - b \]
+	\[  b \geq -n_1 * x - n_2 * y + r \]
+	$\vec{n}$ entzieht man der Hessesche Normalenform:
+	\[ \vec{n} =  \left(\begin{array}{c}n_1\\n_2\end{array}\right) = \left(\begin{array}{c}\frac{p_y}{\sqrt{p_x^2+p_y^2}}\\\frac{-p_x}{\sqrt{p_x^2+p_y^2}}\end{array}\right) \]
+	$p_x$ und $p_x$ ist der Vektor einer Kante $g_n$:\\
+	\[ \vec{p} =  \left(\begin{array}{c}p_x\\p_y\end{array}\right) = \left(\begin{array}{c}x_{n+1} - x_n\\y_{n+1} - y_n\end{array}\right) \]
+	Zum Lösen dieses Problems wird die Bibliotheksmethode \textit{linprog} aus matlab verwendet.\\
 	\\
-	Zum Lösen dieses Problems wird eine Bibliotheksmethode verwendet.\\
-	\\
-	\textbf{Beispiel für ein Quadrat:}\\
+	\textbf{Beispiel für ein einfaches Quadrat:}\\
 	Das Quadrat ist definiert mit den Punkten:
-	\[\left(\begin{array}{c}0\\0\end{array}\right) , \left(\begin{array}{c}10\\0\end{array}\right),\left(\begin{array}{c}10\\10\end{array}\right),\left(\begin{array}{c}0\\10\end{array}\right)\] 
+	\[\left(\begin{array}{c}0\\0\end{array}\right) , \left(\begin{array}{c}10\\0\end{array}\right),\left(\begin{array}{c}10\\10\end{array}\right),\left(\begin{array}{c}0\\10\end{array}\right)\]
+	Das Matrix $A$ und der Vektor $b$ sieht so aus:
+	\[A = \begin{pmatrix}
+		0 & -1 & 1 \\
+		1 & 0 & 1 \\
+		0 & 1 & 1 \\
+		-1 & 0 & 1 \\
+	\end{pmatrix}\]
+	\[b = \begin{pmatrix}
+		0 \\
+		10\\
+		10\\
+		0\\
+	\end{pmatrix}\]
 	Die resultierenden Nebenbedingungen sind:
-	\[ c_2*y+r \leq 0 \]
-	\[ -c_1*x+r \leq -10 \]
-	\[ -c_2*y+r \leq -10 \]
-	\[ c_1*x+*r \leq 0 \]
-	Der \textit{linprog} Solver aus Matlab kommt auf das Ergebnis: $x = 5, y = 5, r = -5$.\\
-	Der Radius muss natürlich Positiv sein.
-	
-	
+	\[ -c_2*y+r \leq 0 \]
+	\[ c_1*x+r \leq -10 \]
+	\[ c_2*y+r \leq -10 \]
+	\[ -c_1*x+r \leq 0 \]
+	 Das Ergebnis einspricht: $x = 5, y = 5, r = -5$.\\
+	 Der Radius muss immer Positiv sein dementsprechend nimmt man immer den Betrag des Radius.\\
+	\textbf{Beispiel für ein größeres Polygon:}\\
+	Das Ergebnis für das größere Polygon einspricht:\\
+	 $x = 472.57, y = 476.66, r = 438.59$.\\
+	Durch einen Plot scheint das Ergebnis zu stimmen.
+	\begin{figure}[h]
+		\begin{center}
+			\includegraphics[width=8cm]{Inscribed.png}
+			\caption{Der größte Inkreis für ein größeres Polygon}
+			\label{fail}
+		\end{center}
+	\end{figure}
+
 	
 	\begin{thebibliography}{00}
 		\bibitem{b1}https://de.wikipedia.org/wiki/Inkreis\#/media/Datei:Pentagon-inscribed-circle.svg
@@ -141,7 +161,6 @@
 	Berechnung des Inkreis des Polygons aus Idee 1
 	\begin{lstlisting}[basicstyle=\tiny]
 	public Circle getLargestInscribedCircle(){
-		//if(!Konvex) throw new IllegalArgument;
 		final Point middle = getMiddle();
 		
 		double minDistance = Double.POSITIVE_INFINITY;
@@ -155,33 +174,46 @@
 		return new Circle(middle, minDistance);
 	}
 	\end{lstlisting} 
+	\lstset{language=Matlab,
+		showspaces=false,
+		showtabs=false,
+		breaklines=true,
+		tabsize=2,
+		showstringspaces=false,
+		breakatwhitespace=true,
+		commentstyle=\color{pgreen},
+		keywordstyle=\color{pblue},
+		stringstyle=\color{pred},
+		basicstyle=\ttfamily
+	}
  	Berechnung des Inkreis des Polygons mit Matlab und LP
-	\begin{lstlisting}[basicstyle=\tiny]
-	C = [[0 0] ,[10 0], [10 10], [0 10], [0 0]];
-	x = reshape(C,2,length(C)/2);
-	x = transpose(x);
+\begin{lstlisting}[basicstyle=\tiny]
+data = [[0 0] ,[10 0], [10 10], [0 10], [0 0]];
+len = length(data)
+data = transpose(reshape(data, 2, len/2));
+len = length(data)
+
+A = zeros(len-1,3);
+b = zeros(len-1,1);
+for i=1:len-1
+	first = data(i,:);
+	second = data(i+1,:);
 	
-	A = zeros(length(x)-1,3);
-	b = zeros(length(x)-1,1);
-	for i=1:length(x)-1
-		first = x(i,:);
-		second = x(i+1,:);
-		
-		p1 = second(1)-first(1);
-		p2 = second(2)-first(2);
-		
-		n1 = p2 / sqrt(p1^2 + p2^2);
-		n2 = -p1 / sqrt(p1^2 + p2^2);
-		A(i,:) = [-n1,-n2,1];
-		b(i) = -((n1)*first(1)+(n2)*first(2));
-	end
+	px = second(1)-first(1);
+	py = second(2)-first(2);
 	
-	disp(A)
-	disp(b)
-	X = linprog([0 0 -1],A,b);
-	disp(X)
-	\end{lstlisting}  
-	
+	n1 = py / sqrt(px^y + py^2);
+	n2 = -px / sqrt(py^2 + py^2);
+	A(i,:) = [-n1,-n2,1];
+	b(i) = -(n1*first(1)+n2*first(2));
+end
+
+disp(A)
+disp(b)
+X = linprog([0 0 -1],A,b);
+disp(X)
+\end{lstlisting}  
+
 
 
 \end{document}
