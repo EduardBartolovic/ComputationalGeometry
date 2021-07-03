@@ -1,5 +1,5 @@
 \documentclass[conference]{IEEEtran}
-\IEEEoverridecommandlockouts
+%\IEEEoverridecommandlockouts
 % The preceding line is only needed to identify funding in the first footnote. If that is unneeded, please comment it out.
 \usepackage{cite}
 \usepackage[ngerman]{babel}
@@ -48,6 +48,17 @@
 	%\begin{abstract}	
 	%\end{abstract}
 
+
+	\section{Schnittpunkt zwischen 2 Strecken }
+	In der ersten Abgabe wurde ein Verfahren entwickelt welches prüft ob sich 2 Strecken schneiden. Für den Bentley-Ottmann Algorithmus reicht dies aber nicht. Für diesen muss auch der genaue Schnittpunkt bekannt sein.
+	Dafür wurde ein neuer Algortithmus entwickelt:\\
+	Hierfür wurde erst mal überprüft ob die Strecke $s_1$ und $s_2$ die Länge 0 haben. Sollte dies der Fall sein wird überprüft ob der Startpunkt auf der anderen Strecke liegt.\\
+	Andernfalls wird das selbe Verfahren genutzt welches in Abgabe 1 verwendet wurde. Es wird mit Hilfe des CCW überprüft ob sich die 2 Strecken schneiden.\\
+	Sollte beide Strecken kollinear sein wird der mögliche Überlappungspunkt zurückgegeben. Sollte die Überlappung größer als nur ein Punkt sein wird der untere linke Punkt zurückgegeben.\\
+	Nun werden die beiden Strecken als Geraden behandelt. So kann man mit der Geradengleichung den Schnittpunkt der zwei Geraden berechnen.\\
+	\[\]
+	Um numerische Fehler zu reduzieren wird bei Horizontalen und Vertikalen Strecken ein leicht angepasstes Verfahren genutzt. Numerische Fehler sind ein großes Problem für den Bentley-Ottmann Algorithmus.
+
 	\section{Basis Bentley-Ottmann Algorithmus}
 	
 	Zu Beginn werden alle Start und Endpunkte aller Strecken $L_{InputStrecken}$ in eine EventQueue $Q_{Event}$ eingefügt. Diese EventQueue ist eine PriorityQueue die intern die Events auf der X-Achse und Eventtyp sortiert. \textit{START} Events haben bei gleichem X Wert Vorrang. \textit{END} Events sind immer zuletzt dran. Die PriorityQueue ist als ein Heap implementiert. Die Operationen besitzen deshalb auch die Komplexität \cite{b2}:
@@ -65,21 +76,12 @@
 	\end{itemize}
 	Es gibt im regulären Bentley-Ottmann Algorithmus 3 Events (\textit{START}, \textit{END}, \textit{INTERSECTION}).
 	Zu beginn liegen nur \textit{START} und \textit{END} Events in $Q_{Event}$.\\
-	Nun wird nacheinander ein Event aus $Q_{Event}$ genommen. Dieses Event wird je nach Typ behandelt.\\
+	Nun wird nacheinander ein Event aus $Q_{Event}$ genommen. Dieses Event wird je nach Typ behandelt:\\
 	Das Event \textit{START} fügt das neue Segment $S_{new}$ in die Sweepline $T_{Sweep}$ ein.
 	Es wird überprüft ob ein Segment über oder unter $S_{new}$ liegt. Sollte dies der Fall sein wird überprüft ob diese sich mit $S_{new}$ schneiden. Bei einem gefundenen Schnittpunkten wird ein neues \textit{INTERSECTION} Event in $T_{Sweep}$ eingefügt.\\
 	Bei einem \textit{END} Event endet ein Segment $S_{old}$. Es wird überprüft ob ein Segment über und unter $S_{old}$ liegt. Sollten diese existieren dann wird überprüft ob diese sich schneiden. Bei einem gefundenen Schnittpunkten wird ein neues \textit{INTERSECTION} Event in $Q_{Event}$ eingefügt. $S_{old}$ wird aus der Sweepline $T_{Sweep}$ entfernt.\\
 	Bei einem \textit{INTERSECTION} Event schneiden sich die zwei Segmente s und t. Dabei werden die Positionen von s und t in $T_{Sweep}$ getauscht. Nach dem werden die Segmente r und u, die möglicherweise unmittelbar unter bzw. über t und s liegen nach Schnittpunkten untersucht. Gefundene Schnittpunkte werden der Ereigniswarteschlange hinzugefügt.
 
-	\section{Schnittpunkt zwischen 2 Geraden }
-	Da es nicht reicht nur zu Wissen das zwei geraden einen Schnittpunkt haben sondern es auch nötig ist auch dessen genaue Position zu kennen musste ein neuer Algortithmus entwickelt werden.\\
-	Hierfür wurde erstmal überprüft ob der Start- oder Endpunkt p1,q1 der Strecke s1 identisch zu einem der Punkt p2 oder q2 der Strecke s2 ist. Sollte dies der Fall sein wird direkt der gemeinsame Punkt zurückgegeben.\\
-	Nun werden die beiden Strecken als Geraden behandelt. So kann man mit der Geradengleichung den Schnittpunkt der zwei Geraden berechnen.\\
-	\[  \]
-	Es besteht die Möglichkeit das der Schnittpunkt S nicht existiert da beide Geraden parallel zu einander sind. In diesem Fall wären wären x und y von S unendlich. In diesem Fall wird ein Optional.empty() zurückgegeben.
-	Da der Schnittpunkt S über die Geradengleichung berechnet worden ist kann es sein das dieser sich auf den Geraden von s1 und s2 befindet aber nicht auf der Strecke s1 oder s2. Deshalb muss überprüft werden ob sich der Punkt in der Bounding Box der beiden Strecken befindet. Sollte dies bei beiden der Fall sein dann ist dies der korrekte Schnittpunkt.\\
-	Um numerische Fehler zu reduzieren wird bei Horizontalen und Vertikalen Strecken ....
-	++++++++++++++++++++++++++
 	\section{Probleme für den Algoritmus}
 	Der Algorithmus hat Probleme wenn folgende Voraussetzungen nicht erfüllt sind:
 	\begin{enumerate}
@@ -95,21 +97,19 @@
 		
 		\item keine überlappenden Segment
 	\end{enumerate}
-	
+	Die Problemfälle werden in der Abbildung \ref{Problem} aufgezeigt.
 	\begin{figure}[h]
 		\begin{center}
 			\includegraphics[width=6cm]{ProblemFaelle.png}
 			\caption{Problemfälle für den Standard Bentley Ottman algorithmus}
-			\label{figure_3}
+			\label{Problem}
 		\end{center}
 	\end{figure}
 
-
-
 	\section{Behandlung der Sonderfälle}
-	In meiner Implementierung werden alle Sonderfälle behandelt.
+	In meiner Implementierung werden alle Sonderfälle behandelt. Manche sind einfacher zu behandeln als andere.
 	\subsection{Nur echte Schnittpunkte}
-	Meine Implementierung unterstützt auch unechte Schnittpunkte. Hierfür wurde vor allem die Sweepline angepasst. So wird die gewöhnliche Sweepline Implementierung die nur aus einem Baum $T_{Sweep}$ mit Strecken besteht mit einer Funktionalität ergänzt die ähnlich wie bei Buckets bei einem Hashset funktioniert. So wird bei START Events überprüft ob die Position des Startpunktes in $T_{Sweep}$ bereits existiert. Sollte dies der Fall sein wird das Segment einfach zusätzlich in den Knoten eingefügt. Der Schlüssel der Knoten ist der aktuelle Y-Wert.\\
+	Meine Implementierung unterstützt auch unechte Schnittpunkte. Hierfür wurde vor allem die Sweepline angepasst. So wird die gewöhnliche Sweepline Implementierung die nur aus einem Baum $T_{Sweep}$ mit Strecken besteht mit einer Funktionalität ergänzt die ähnlich wie bei Buckets bei einem Hashset funktioniert. So wird bei START Events überprüft ob die Position des Startpunktes in $T_{Sweep}$ bereits existiert. Sollte dies der Fall sein wird das Segment einfach zusätzlich in den Knoten eingefügt. Dies ist in der Abbildung \ref{figure_collision} zu sehen. Der Schlüssel der Knoten ist der aktuelle Y-Wert.\\
 	\begin{figure}[h!]
 		\begin{center}
 			\includegraphics[width=6cm]{BaumKollision.png}
@@ -117,7 +117,7 @@
 			\label{figure_collision}
 		\end{center}
 	\end{figure}\\
-	Leider müssen werden jedes mal wenn die Sweepline bewegt wird die Elemente in $T_{Sweep}$ zu neu sortiert werden. $T_{Sweep}$ neu zu sortieren bedarf $\mathcal{O}(n*log(n))$. Theoretisch müsste es möglich sein dies zu vermeiden in dem immer nur die Nachbar verglichen werden. Dies ist aber sehr komplex da bei Neusortierungen die Buckets mit neu sortiert werden müssen. Ich bin überzeugt das es auch ohne kompletter Neusortierung gehen müsste. Der Aufwand dafür ist aber extrem hoch. Es reicht nicht aus immer nur die direkten Nachbarn zu betrachten da potentiell weiter entfernte Strecken auch noch in Betracht kommen können. Deshalb muss neben den direkten Nachbarn noch weiter überprüft werden bis man sicher gehen kann das diese sich nicht schneiden können.
+	Leider müssen werden jedes mal wenn die Sweepline bewegt wird die Elemente in $T_{Sweep}$ zu neu sortiert werden. $T_{Sweep}$ neu zu sortieren bedarf $\mathcal{O}(n*log(n))$. Theoretisch müsste es möglich sein dies zu vermeiden in dem immer nur die Nachbar verglichen werden. Dies ist aber sehr komplex da bei Neusortierungen die Buckets mit neu sortiert werden müssen. Ich bin überzeugt das es auch ohne kompletter Neusortierung gehen müsste. Der Implementierungsaufwand dafür ist aber extrem hoch. Es reicht nicht aus immer nur die direkten Nachbarn zu betrachten da potentiell weiter entfernte Strecken auch noch in Betracht kommen können. Deshalb muss neben den direkten Nachbarn noch weiter überprüft werden bis man sicher gehen kann das diese sich nicht schneiden können.
 	
 	\subsection{X-Koordinaten der Schnitt- und Endpunkte sind paarweise identisch}
 	Dieses Problem ist ein Teilproblem des vorherigen Problems und damit schon gelöst.
@@ -139,45 +139,43 @@
 	Elemente der Länge 0 werden einfach als vertikale Segmente behandelt.
 	
 	\subsection{Mehrfachschnittpunkte}
-	Mehrfachschnittpunkte wurden behandelt. Hierfür wird die oben beschriebene Baumstruktur der Sweepline $T_{Sweep}$ genutzt. So wird an einem \textit{INTERSECTION} Event in der SweepLine gesucht ob an der Stelle weitere Segmente durchlaufen. Sollte dies der Fall sein wird werden direkt die korrekte menge an Schnittpunkten der Outputliste hinzugefügt. Wichtig ist aber das der Fall in der Abbildung \ref{Multi} betrachtet wird. Hier muss an dem Schnittpunkt der höchste und niedrigste Segment gefunden werden und mit den benachbarten Strecken abgeglichen werden.
+	Mehrfachschnittpunkte wurden behandelt. Hierfür wird die oben beschriebene Baumstruktur der Sweepline $T_{Sweep}$ genutzt. So wird an einem \textit{INTERSECTION} Event in der Sweep Line gesucht ob an der Stelle weitere Segmente durchlaufen. Sollte dies der Fall sein wird werden direkt die korrekte menge an Schnittpunkten der Outputliste hinzugefügt. Wichtig ist aber das der Fall in der Abbildung \ref{Multi} betrachtet wird. Hier muss an dem Schnittpunkt der höchste und niedrigste Segment gefunden werden und mit den benachbarten Strecken abgeglichen werden.
 	\begin{figure}[h]
 		\begin{center}
 			\includegraphics[width=6cm]{MultiSchnitt.png}
-			\caption{Problemfälle mit überlappenden Elementen}
+			\caption{Problemfälle mit Multischnittpunkten}
 			\label{Multi}
 		\end{center}
 	\end{figure}
 	
 	\subsection{Überlappende Segmente}
-	Auch dieses Problem ist auch ein Teilproblem der nur echten Schnittpunkte. Dies kann aber noch mehr Probleme bereiten als das nur Überlappungen in einzelnen Punkten. Wichtig ist das die Funktion die Schnittpunkte zwischen 2 Strecken findet in der Lage ist trotz Überlappung einen Schnittpunkt findet. Da eigentlich überlappende Segmente unendlich viele Schnittpunkte hat wird einfach der untere linke Punkt gewählt.\\
-	Die wichtigsten Fälle sind in Abbildung \ref{figure_collision} abgebildet:
+	Auch dieses Problem ist auch ein Teilproblem der nur echten Schnittpunkte. Dies kann aber noch mehr Probleme bereiten als das nur Überlappungen in einzelnen Punkten. Wichtig ist das die Funktion die Schnittpunkte zwischen zwei Strecken findet in der Lage ist trotz Überlappung einen Schnittpunkt findet. Da eigentlich überlappende Segmente unendlich viele Schnittpunkte hat wird einfach der untere linke Punkt gewählt.\\
+	Die wichtigsten Fälle bei der Überlappung sind in Abbildung \ref{uberlap} abgebildet:
 	\begin{figure}[h]
 		\begin{center}
 			\includegraphics[width=6cm]{ProblemUberlappen.png}
 			\caption{Problemfälle mit überlappenden Elementen}
-			\label{figure_3}
+			\label{uberlap}
 		\end{center}
 	\end{figure}\\
-	Schwierig ist vor allem der Fall 4. Hier muss am Startpunkt $p3$ der Schnittpunkt $q2/q3$ gefunden werden. Dazu müssen die Strecken 1 und 2 welche beide gleich weit unter Strecke 3 liegen überprüft werden.
+	Schwierig ist vor allem der Fall 4. Hier muss am Startpunkt $p3$ der Schnittpunkt $q2/q3$ gefunden werden. Dazu müssen die Strecken 1 und 2 welche beide gleich weit unter Strecke 3 liegen überprüft werden. Bei einer schlechten Sweep Line Struktur könnte dieser Schnittpunkt nicht auffallen weil man zufällig nur die Falsche Strecke überprüft.
 	
 	\section{Genauigkeit}
-	Ein Problem des Bentley Ottmann Verfahrens ist es das Schnittpunkte die sehr nah aneinander liegen Probleme verursachen können. Wichtig ist das die Berechnungen eine hohe Genauigkeit aufweisen. So liegen Schnittpunkte teilweise nur 4 Nachkommastellen auseinander.
+	Ein Problem des Bentley Ottmann Verfahrens ist es das Schnittpunkte die sehr nah aneinander liegen Probleme verursachen können. Wichtig ist das die Berechnungen eine hohe Genauigkeit aufweisen. So liegen Schnittpunkte teilweise nur 4 Nachkommastellen auseinander. So sind in unserem Datensatz sehr nah aneinander wie man in der Abbildung \ref{close} sehen kann.
 	\begin{figure}[h]
 		\begin{center}
 			\includegraphics[width=6cm]{CloseIntersections.png}
 			\caption{Sehr nah liegende Schnittpunkte}
-			\label{figure_3}
+			\label{close}
 		\end{center}
 	\end{figure}\\
 	\section{Komplexität}
-	Die Komplexität ist abhängig vom Input. So gibt es normalerweise $2n + k$ Events, wobei $n$ die Anzahl der Segmente und $k$ die Anzahl der Schnittpunkten entspricht. Wobei bei Sonderfälle die Anzahl geringer Ausfallen kann. Da bei vertikalen Strecken nur ein Punkt in die Eventqueue eingefügt wird. Das selbe gilt auch für Schnittpunkte die in einem Startpunkt liegen und keinen neuen Eintrag in die EventQueue bekommen. So gilt für $m$ nicht vertikale Strecken, $s$ Schnittpunkte ohne Überschneidungen mit anderen Events und $v$ vertikalen Strecken:
+	Die Komplexität unterscheidet sich etwas von herkömmlichen Bentley Ottman Algorithmus. Die Komplexität ist weiterhin abhängig vom Input. So gibt es normalerweise $2n + k$ Events, wobei $n$ die Anzahl der Segmente und $k$ die Anzahl der Schnittpunkten entspricht. Wobei bei Sonderfälle die Anzahl geringer Ausfallen kann. Da bei vertikalen Strecken nur ein Punkt in die Eventqueue eingefügt wird ist die Anzahl der Events geringer. Das selbe gilt auch für Schnittpunkte die in einem Startpunkt liegen und keinen neuen Eintrag in die EventQueue bekommen. So gilt für $m$ nicht vertikale Strecken, $s$ Schnittpunkte ohne Überschneidungen mit anderen Events und $v$ vertikalen Strecken:
 	\[ 2n + k \geq 2m + s + v \]
 	Die Komplexität des Sortierens der Eventqueue beträgt $\mathcal{O}((2m+v)*log(2m+v))$ was trotzdem $\mathcal{O}(n*log(n))$ entspricht.\\
 	Operationen in die EventQueue und der Sweepline haben die Komplexität $\mathcal{O}(log(m))$. Allerdings wird bei jedem bewegen der Sweepline die Sweepline neu berechnet. Dies resultiert leider in $\mathcal{O}(m*log(m))$.\\
 	Zusammengefasst kann man den Aufwand wie folgt beschreiben:
 	\[\mathcal{O}(m*log(m)) + m*\mathcal{O}(m*log(m)) \]
-	
-	\newpage
 	
 	\section{Performance}
 	
@@ -206,8 +204,7 @@
 		\end{tabular}
 	    \caption{Laufzeiten der Algorithmen}
 	\end{table}
-
-	Auch noch test mit 4Kerner?
+++++++++++++++++++++++++NOCH Korrekt?????????????????????
 
 	
 	\section{Durchschnittliche Sweeplinegröße}
@@ -238,31 +235,5 @@
 		\bibitem{b2}https://docs.oracle.com/javase/8/docs/api/java/util/PriorityQueue.html
 		\bibitem{b1}https://docs.oracle.com/javase/7/docs/api/java/util/TreeMap.html
 	\end{thebibliography}
-	
-	
-	
-	\section{Anhang}
-
-	Berechnung der Fläche eines Bundeslandes:
-	\begin{lstlisting}[basicstyle=\tiny]
-	public double calculateArea(){
-		double sum = 0;
-		for(Polygon p : areas){
-			boolean isInside = false;
-			for(Polygon p2 : areas){
-				//Check if Hole
-				if(!p.equals(p2) && p.isPolygonInside(p2) ){ 
-					isInside = true;
-					break;
-				}   
-			}
-			if(isInside)
-				sum -= Math.abs(p.calculateArea());
-			else
-				sum += Math.abs(p.calculateArea());
-		}
-		return sum;
-	}
-	\end{lstlisting}	
 
 \end{document}
