@@ -113,11 +113,9 @@ public class Bundesland {
      * @return Ob Punkt in Polygon oder im Loch ist.
      */
     public boolean isPointInside(Point p){
-        final List<Polygon> relevantPolygons = areas.stream() 
-                                            .filter(a -> a.isPointInside(p))
-                                            .collect(Collectors.toList()); // all Polygons containing P
-         
-        return relevantPolygons.size()%2==1;
+        return areas.stream() 
+                .filter(a -> a.isPointInside(p))// all Polygons containing P 
+                .count()%2 == 1;
     }
 
     @Override

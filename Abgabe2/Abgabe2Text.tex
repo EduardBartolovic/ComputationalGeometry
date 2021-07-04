@@ -307,7 +307,7 @@
 	Im Grunde sind sich alle Verhältnisse sehr ähnlich. Ein grober Fehler ist erst einmal unwahrscheinlich. Diese Methode ist aber etwas zu ungenau um kleine Fehler zu entdecken. Dafür ist der Datensatz zu Fehlerhaft. So fehlen zum Beispiel einige innerdeutsche En- und Exklaven.\\
 	Deshalb wurden über 50 Junit Tests geschrieben um die Funktionalität des Codes zu überprüfen. Diese Tests decken vorallem die bisher angesprochenen Randfälle ab. Die Tests wurden an Kommilitonen weitergegeben und diese bestätigten deren Qualität.\\
 	Auch wurde jedes Bundesland genau untersucht. So wurde überprüft ob Inseln und Exklaven addiert werden und Löcher subtrahiert werden.\\
-	Die korrekte Zuordnung der Landeshauptsädte
+	Die korrekte Zuordnung der Landeshauptstädte ist auch überprüft worden. Die Überprüfung wurde manuell mit Allgemeinwissen durchgeführt. Die zugrundeliegende Funktion wurde trotzdem mit Unit Tests getestet. 
 	
 	
 	\section{Komplexität}
@@ -371,15 +371,13 @@ public boolean isPolygonInside(Polygon that){
 		throw new IllegalArgumentException("Polygon is not Closed");
 	
 	for(int thisCounter = 1; thisCounter < this.cords.size(); thisCounter++){
-		final Line2Points thisLine = new Line2Points(this.cords.get(thisCounter-1), this.cords.get(thisCounter));
+		final Segment thisLine = new Segment(this.cords.get(thisCounter-1), this.cords.get(thisCounter));
 		for(int thatCounter = 1; thatCounter < that.cords.size(); thatCounter++){
-			final Line2Points thatLine = new Line2Points(that.cords.get(thatCounter-1), that.cords.get(thatCounter));
-			if(thisLine.isIntersecting(thatLine)){
+			final Segment thatLine = new Segment(that.cords.get(thatCounter-1), that.cords.get(thatCounter));
+			if(thisLine.isIntersecting(thatLine))
 				return false; // Is intersecting so this can not be in that
-			}
 		}
 	}
-	
 	return that.isPointInside(this.getCords().get(0)); //check if one Point of this is in that   
 }
 	\end{lstlisting}
@@ -390,8 +388,7 @@ public boolean isPolygonInside(Polygon that){
 		for(Polygon p : areas){
 			boolean isInside = false;
 			for(Polygon p2 : areas){
-				//Check if Hole
-				if(!p.equals(p2) && p.isPolygonInside(p2) ){ 
+				if(!p.equals(p2) && p.isPolygonInside(p2) ){ //Check if Hole
 					isInside = true;
 					break;
 				}   
@@ -413,61 +410,53 @@ public boolean isPolygonInside(Polygon that){
 * @return Ob Punkt in Polygon oder im Loch ist.
 */
 public boolean isPointInside(Point p){
-	final List<Polygon> relevantPolygons = areas.stream() 
-	.filter(a -> a.isPointInside(p))
-	.collect(Collectors.toList()); // all Polygons containing P
-	
-	
-	return relevantPolygons.size()%2==1;
+    return areas.stream() 
+			.filter(a -> a.isPointInside(p))// all Polygons containing P 
+			.count()%2 == 1;
 }
 	\end{lstlisting}
 	Berechnung ob ein Punkt in einem Polygon liegt:
 \begin{lstlisting}[basicstyle=\tiny]
 public boolean isPointInside(Point p){
 	if(!isClosed())
-		throw new IllegalArgumentException("Polygon is not Closed");
-	//Check if Point lies on an edge
-	final Line2Points pointLine = new Line2Points(p,p); // generate Dummy Line to check if it does intersect with Edges
-	for(int counter = 1; counter < cords.size() ; counter++){
-		if(pointLine.isIntersecting(new Line2Points(cords.get(counter-1),cords.get(counter)))) 
-		return true;          
-	}
+	throw new IllegalArgumentException("Polygon is not Closed");
 	
-	final double maxXValue = cords.stream()
-		.mapToDouble(c -> c.getX())
-		.reduce(Double::max)
-		.orElseThrow(IllegalStateException::new);
+	//Check if Point lies on an edge
+	for(int counter = 1; counter < cords.size() ; counter++)
+	if(new Segment(cords.get(counter-1),cords.get(counter)).isOnLine(p))
+	return true;          
+	
+	final double maxXValue = getMaxX();
 	
 	if(p.getX() > maxXValue)
-		return false;
+	return false;
 	
 	final Point extreme = new Point(maxXValue+1, p.getY());
 	
 	int startCounter = 0;
 	while(ccw(extreme, p, cords.get(startCounter)) == 0)
-		startCounter++;
+	startCounter++;
 	
 	int intersections = 0;
 	double lr = orientation(extreme, p, cords.get(startCounter));
 	for(int counter = startCounter+1; counter < cords.size() ; counter++){
 		final double lrNew = orientation(extreme, p, cords.get(counter));
-		if( Math.abs( lrNew - lr ) == 2){
+		if( Math.abs( lrNew - lr ) == 2){ //detect Sidechange 
 			lr = lrNew;
-			double o1 = ccw(cords.get(counter-1), cords.get(counter), extreme);
-			double o2 = ccw(cords.get(counter-1), cords.get(counter), p);
-			if(o1*o2<=0){
-				intersections++;
-			}
+			final double o1 = ccw(cords.get(counter-1), cords.get(counter), extreme);
+			final double o2 = ccw(cords.get(counter-1), cords.get(counter), p);
+			if(o1*o2<=0) //detect true Sidechanges
+			intersections++;
 		}
 	}
 	for(int counter = 1; counter <= startCounter ; counter++){
 		final double lrNew = orientation(extreme, p, cords.get(counter));
 		if( Math.abs( lrNew - lr ) == 2){
 			lr = lrNew;
-			double o1 = ccw(cords.get(counter-1), cords.get(counter), extreme);
-			double o2 = ccw(cords.get(counter-1), cords.get(counter), p);
+			final double o1 = ccw(cords.get(counter-1), cords.get(counter), extreme);
+			final double o2 = ccw(cords.get(counter-1), cords.get(counter), p);
 			if(o1*o2<=0)
-				intersections++;
+			intersections++;
 		}
 	}
 	return intersections % 2 == 1; // return true if count is odd, false otherwise
