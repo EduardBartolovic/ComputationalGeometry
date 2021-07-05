@@ -176,7 +176,7 @@ Selbst nach dieser Optimierung liegt das Problem noch immer in der gleichen Komp
 
 \subsection{Parallelisierung}
 Um die Laufzeit noch weiter zu verbessern wurde eine Parallelisierung untersucht.\\
-Hierbei konnte man ganz einfach den Code parallelisieren indem man Vorteile der Funktionalen Programmierung nutzt. Es werden einfach die gesamte Menge der zu vergleichenden Strecken auf m Kerne verteilt. Die Ergebnisse der einzelnen Threads werden zusammenaddiert. Der Anteil des sinkt bei größeren Problemen zunehmend. Bei kleinen Problemen lohnt sich die Parallelisierung wegen des großen Overheads nicht. Getestet wurde auf auf einem 6 Kern Prozessor mit Hyperthreading. Erwartungsgemäß erhaltet man einen Speedup von etwa 8 bei größeren Problemen wo der Overhead keine große Rolle mehr spielt.\\
+Hierbei konnte man ganz einfach den Code parallelisieren indem man Vorteile der Funktionalen Programmierung nutzt. Es werden einfach die gesamte Menge der zu vergleichenden Strecken auf m Kerne verteilt. Die Ergebnisse der einzelnen Threads werden zusammenaddiert. Der Anteil des sinkt bei größeren Problemen zunehmend. Bei kleinen Problemen lohnt sich die Parallelisierung wegen des großen Overheads nicht. Getestet wurde auf einem 6 Kern Prozessor mit Hyperthreading. Erwartungsgemäß erhält man einen Speedup von etwa 8 bei größeren Problemen wo der Overhead keine große Rolle mehr spielt.\\
 \\
 \begin{tabular}{|c|c|c|c|}
 	\hline

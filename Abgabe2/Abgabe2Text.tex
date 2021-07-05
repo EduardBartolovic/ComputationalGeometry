@@ -60,7 +60,7 @@
 	\end{vmatrix} \]
 	
 	\section{Berechnung der Fläche eines Polygons}
-	Für die Berechnung der Fläche eines Polygons berechnet man die Summe aller Flächen der Dreiecke die sich mit den Eckpunkten des Polygons und dem Nullpunkt bilden lassen können.
+	Für die Berechnung der Fläche eines Polygons berechnet man die Summe aller Flächen der Dreiecke, die sich mit den Eckpunkten des Polygons und dem Nullpunkt bilden lassen können.
 	\begin{figure}[h]
 		\begin{center}
 			\includegraphics[width=6cm]{AreaPoly.png}
@@ -69,14 +69,14 @@
 		\end{center}
 	\end{figure}
 	\[ A = \sum_{i=1}^{n} \frac{ccw(0,p_n,p_{n+1})}{2} \]
-	Da in die Formel des ccw der Nullpunkt eingesetzt wird lässt sich das Problem vereinfachen:
+	Da in die Formel des ccw der Nullpunkt eingesetzt wird, lässt sich das Problem vereinfachen:
 	\[ ccw(p,q,r) = p_x*q_y - p_y*q_x + q_x*r_y - q_y*r_x + p_y*r_x - p_x*r_y \]
 	\[ ccw(0,q,r) = 0*q_y - p_y*q_x + q_x*r_y - q_y*r_x + 0*r_x - 0*r_y \]
 	\[ ccw(0,q,r) = 0*q_y - 0*q_x + q_x*r_y - q_y*r_x + 0*r_x - 0*r_y \]
 	\[ ccw(0,q,r) =  q_x*r_y - q_y*r_x  \]
 	Zurück in die Formel eingesetzt:
 	\[ A = \sum_{i=1}^{n} \frac{(x_{i}*y_{i+1}-y_{i}*x_{i+1})}{2}\]
-	Um die Anzahl der Divisionen zu verringern wird das $\frac{1}{2}$ aus der Summe herausgezogen:
+	Um die Anzahl der Divisionen zu verringern, wird das $\frac{1}{2}$ aus der Summe herausgezogen:
 	\[ A= \frac{1}{2}\sum_{i=1}^{n}(x_{i}*y_{i+1}-y_{i}*x_{i+1})\]
 	Zusätzlich lässt sich auch noch die Anzahl der Multiplikationen verringern \cite{b1}:
 	\[ A = \frac{1}{2}\sum_{i=1}^{n}(x_{i}*y_{i+1}-y_{i}*x_{i+1})\]	
@@ -86,11 +86,11 @@
 	\[ = \frac{1}{2} \sum_{i=1}^{n}(x_{i-1}*y_{i}) - \frac{1}{2}\sum_{i=1}^{n}(y_i*x_{i+1})\]
 	\[ = \frac{1}{2}\sum_{i=1}^{n}(x_{i-1}*y_{i}-y_{i}*x_{i+1})\]
 	\[ A = \frac{1}{2}\sum_{i=1}^{n} y_i(x_{i-1}-x_{i+1})\]
-	Wenn die Eckpunkte gegen den Uhrzeigersinn definiert sind dann ist die Fläche positiv. Im Uhrzeigersinn ist die Fläche negativ.
+	Wenn die Eckpunkte gegen den Uhrzeigersinn definiert sind, dann ist die Fläche positiv. Im Uhrzeigersinn ist die Fläche negativ.
 	
 	
 	\section{Berechnung der Fläche eines Bundeslandes}
-	Ein Bundesland besteht mindestens aus einem Polygon. Manche Bundesländer sind aber über mehrere Polygone definiert. So zum Beispiel besitzt Niedersachsen Inseln die einzeln definiert sind. Auch ist die Stadt Bremen als Loch definiert. 
+	Ein Bundesland besteht mindestens aus einem Polygon. Manche Bundesländer sind aber über mehrere Polygone definiert. So zum Beispiel besitzt Niedersachsen Inseln, die einzeln definiert sind. Auch ist die Stadt Bremen als Loch definiert. 
 	\begin{figure}[h]
 		\begin{center}
 			\includegraphics[width=8cm]{Niedersachsen.png}
@@ -98,8 +98,8 @@
 			\label{Niedersachsen}
 		\end{center}
 	\end{figure}\\
-	So muss die Fläche der Inseln und der Hauptfläche summiert werden. Die Fläche der Stadt Bremen aber abgezogen werden. Idealerweise hätte das Loch ein negatives Vorzeichen und die Inseln alle ein positives Vorzeichen sodass einfach eine Summe über alle Polygone gebildet werden kann.\\
-	Das Problem mit dem vorliegenden Datensatz ist das dieser sich nicht an die Konvention bezüglich des Vorzeichens der Fläche und der Definierung der Eckpunkte im Uhrzeigersinn hält. So gibt es Inseln die eine negative Fläche besitzen oder Löcher mit postivem Vorzeichen.\\
+	So muss die Fläche der Inseln und der Hauptfläche summiert werden. Die Fläche der Stadt Bremen aber abgezogen werden. Idealerweise hätte das Loch ein negatives Vorzeichen und die Inseln alle ein positives Vorzeichen, sodass einfach eine Summe über alle Polygone gebildet werden kann.\\
+	Das Problem mit dem vorliegenden Datensatz ist, das dieser sich nicht an die Konvention bezüglich des Vorzeichens der Fläche und der Definierung der Eckpunkte im Uhrzeigersinn hält. So gibt es Inseln, die eine negative Fläche besitzen oder Löcher mit positivem Vorzeichen.\\
 	Aus diesem Grund werden erst einmal alle Flächen als positive behandelt. Deshalb muss eine neue Überprüfung stattfinden die überprüft ob ein Polygon ein Loch ist. Hierbei wird getestet ob ein Polygon in einem anderen Polygon vollständig enthalten ist.
 	\subsection{Sonderfall: Polygon in einem anderen Polygon}
 	Wie testet man ob ein Polygon $P_{klein}$ in einem anderen Polygon $P_{groß}$ vollständig enthalten ist?
@@ -124,14 +124,14 @@
 	Deshalb muss überprüft werden ob ein beliebiger Punkt aus $P_{klein}$ in $P_{groß}$ liegt und keine Kanten von $P_{groß}$ und $P_{klein}$ Schnittpunkten besitzen.
 	
 	\section{Überprüfung ob ein Punkt in einem Polygon liegt}
-	Für die Überprüfung ob ein Punkt $\tilde{p}$ in einem Polygon P liegt, wird zuerst eine Strecke aus dem Punkt $\tilde{p}$ zu einem festgelegtem Punkt $\tilde{q}$ definiert. Der Punkt $\tilde{q}$ muss außerhalb des Polygons P liegen. Dabei legt man den Punkt rechts vom Polygon P und auf die selbe Höhe des Punktes $\tilde{p}$.\\
-	Um sicher zu gehen das sich ein Punkt rechts von einem Polygon P befindet, iteriert man über alle Eckpunkte des Polygons und sucht dabei den höchsten X Wert und addiert dann einen Wert darauf.\\
+	Für die Überprüfung ob ein Punkt $\tilde{p}$ in einem Polygon P liegt, wird zuerst eine Strecke aus dem Punkt $\tilde{p}$ zu einem festgelegtem Punkt $\tilde{q}$ definiert. Der Punkt $\tilde{q}$ muss außerhalb des Polygons P liegen. Dabei legt man den Punkt rechts vom Polygon P und auf dieselbe Höhe des Punktes $\tilde{p}$.\\
+	Um sicherzugehen, dass sich ein Punkt rechts von einem Polygon P befindet, iteriert man über alle Eckpunkte des Polygons und sucht dabei den höchsten X-Wert und addiert dann einen Wert darauf.\\
 	\[ \tilde{q} = \left(\begin{array}{c}max(P_x)+1\\\tilde{p}_y\end{array}\right) \]
 	Jetzt zählt man die Schnittpunkte nur mit echten Seitenwechseln zwischen der Strecke $[\tilde{p}\tilde{q}]$ und allen Kanten des Polygons P. Dabei startet man bei einem Eckpunkt $p_{Start}$ der nicht auf $[\tilde{p}\tilde{q}]$ liegt. Ist die Anzahl ungerade liegt der Punkt p im Polygon P. Ist die Anzahl gerade liegt p außerhalb von P.\\
 	Um echte Seitenwechsel zu identifizieren wird muss folgende Bedingung wahr sein:
 	\[ ccw(p_{i-1} , p_i, \tilde{p}) * ccw(p_{i-1} , p_i, \tilde{q}) \leq 0 \]
-	Zusätzlich muss der Fall abgedeckt werden das der Punkt p auf der Kante des Polygons liegt. Hierbei iteriert man einfach über alle Kanten $[p_n,q_n]$.\\
-	Die Abbildung \ref{PointInPoly} zeigt die wichtigsten Fälle die abgedeckt werden müssen.
+	Zusätzlich muss der Fall abgedeckt werden, dass der Punkt p auf der Kante des Polygons liegt. Hierbei iteriert man einfach über alle Kanten $[p_n,q_n]$.\\
+	Die Abbildung \ref{PointInPoly} zeigt die wichtigsten Fälle, die abgedeckt werden müssen.
 	\begin{figure}[h]
 		\begin{center}
 			\includegraphics[width=8cm]{PointInPolygon.png}
@@ -140,7 +140,6 @@
 		\end{center}
 	\end{figure}\\
 	In folgender Tabelle werden die einzelnen Punkte/Fälle kurz beschrieben. So wird die Anzahl der Schnittpunkte, die Anzahl der echten Seitenwechsel und der Output des Algorithmus aufgelistet.\\
-	
 	\scalebox{0.9}{
 	\begin{tabular}{|c|c|c|c|c|}
 		\hline
@@ -167,7 +166,7 @@
 	\end{tabular}
 	}
 	\section{Überprüfung ob eine Stadt in einem Bundesland liegt}
-	Um zu überprüfen ob eine Stadt in einem Bundesland liegt wird erst einmal nach allen Polygonen gesucht in denen der Punkt liegt. Ist die Anzahl gerade dann liegt der Punkt nicht im Bundesland und liegt damit in einem Loch. Ist die Zahl ungerade dann liegt das Polygon in keinem Loch. Für dieses Verfahren dürfen die Polygone sich nicht schneiden. Dies kann aber bei Ländern eigentlich sowieso nicht der Fall sein. So sollte aber dieser Algorithmus auch mit den sehr komplizierten Grenzverläufen wie zum Beispiel mit der Belgischen Exklave Baarle-Hertog zurechtkommen.
+	Um zu überprüfen, ob eine Stadt in einem Bundesland liegt, wird erst einmal nach allen Polygonen gesucht, in denen der Punkt liegt. Ist die Anzahl gerade dann liegt der Punkt nicht im Bundesland und liegt damit in einem Loch. Ist die Zahl ungerade, dann liegt das Polygon in keinem Loch. Für dieses Verfahren dürfen die Polygone sich nicht schneiden. Dies kann aber bei Ländern eigentlich sowieso nicht der Fall sein. So sollte aber dieser Algorithmus auch mit den sehr komplizierten Grenzverläufen wie zum Beispiel mit der belgischen Exklave Baarle-Hertog zurechtkommen.
 	\begin{figure}[h]
 		\begin{center}
 			\includegraphics[width=3.2cm]{StadtInBundesland.png}
@@ -218,7 +217,7 @@
 		\hline
 	\end{tabular}\\
 	\vspace{2.0cm}\\
-	Die Ergebnisse für die Städte die einzelnen Bundesländern zugewiesen werden:
+	Die Ergebnisse für die Städte, die einzelnen Bundesländern zugewiesen werden:
 	\vspace{0.5cm}\\
 	\begin{tabular}{|c|c|}
 		\hline
@@ -260,7 +259,7 @@
 	
 	
 	\section{Testen des Algorithmus}
-	Eine Möglichkeit ist es die Fläche mit der echten Daten aus Wikipedia zu vergleichen.\\
+	Eine Möglichkeit ist es, die Fläche mit der echten Daten aus Wikipedia zu vergleichen.\\
 	\vspace{0.2cm}
 	\scalebox{0.85}{
 	\begin{tabular}{|c|c|c|c|}
@@ -304,11 +303,10 @@
 		\hline
 	\end{tabular}
 	}\\
-	Im Grunde sind sich alle Verhältnisse sehr ähnlich. Ein grober Fehler ist erst einmal unwahrscheinlich. Diese Methode ist aber etwas zu ungenau um kleine Fehler zu entdecken. Dafür ist der Datensatz zu Fehlerhaft. So fehlen zum Beispiel einige innerdeutsche En- und Exklaven.\\
-	Deshalb wurden über 50 Junit Tests geschrieben um die Funktionalität des Codes zu überprüfen. Diese Tests decken vorallem die bisher angesprochenen Randfälle ab. Die Tests wurden an Kommilitonen weitergegeben und diese bestätigten deren Qualität.\\
-	Auch wurde jedes Bundesland genau untersucht. So wurde überprüft ob Inseln und Exklaven addiert werden und Löcher subtrahiert werden.\\
-	Die korrekte Zuordnung der Landeshauptstädte ist auch überprüft worden. Die Überprüfung wurde manuell mit Allgemeinwissen durchgeführt. Die zugrundeliegende Funktion wurde trotzdem mit Unit Tests getestet. 
-	
+	Im Grunde sind sich alle Verhältnisse sehr ähnlich. Ein grober Fehler ist erst einmal unwahrscheinlich. Diese Methode ist aber etwas zu ungenau, um kleine Fehler zu entdecken. Dafür ist der Datensatz zu fehlerhaft. So fehlen zum Beispiel einige innerdeutsche En- und Exklaven.\\
+	Deshalb wurden über 50 Junit Tests geschrieben, um die Funktionalität des Codes zu überprüfen. Diese Tests decken vor allem die bisher angesprochenen Randfälle ab. Die Tests wurden an Kommilitonen weitergegeben und diese bestätigten deren Qualität.\\
+	Auch wurde jedes Bundesland genau untersucht. So wurde überprüft, ob Inseln und Exklaven addiert werden und Löcher subtrahiert werden.\\
+	Die korrekte Zuordnung der Landeshauptstädte ist auch überprüft worden. Die Überprüfung wurde manuell mit Allgemeinwissen durchgeführt. Die zugrunde liegende Funktion wurde trotzdem mit Unit Tests getestet.
 	
 	\section{Komplexität}
 	\begin{itemize}
@@ -322,14 +320,12 @@
 		
 		\item Die Komplexitätsklasse für das Berechnen wie viele Polygone aus einer Menge $\{P_1,P_2,...,P_n\}$ in einander liegen ist $\mathcal{O}(n^2)$, wobei n die Anzahl der Polygone beschreibt. Dies würde sich theoretisch optimieren lassen. Da aber die Menge der Polygone in der Aufgabe nie wirklich groß ist wäre der Aufwand für einer effizienteren Implementierung unverhältnismäßig groß und würde keine oder nur kleine Verbesserungen bringen.
 	\end{itemize}
-	Zusammengefasst kann man sagen das die je nach Aufgaben die Brechungen in der linearen oder in der quadratischen Komplexitätsklasse liegen.
+	Zusammengefasst kann man sagen, das die je nach Aufgaben die Brechungen in der linearen oder in der quadratischen Komplexitätsklasse liegen.
 	
 	\begin{thebibliography}{00}
 		\bibitem{b1}https://www.wikiwand.com/de/Gaußsche\_Trapezformel
 		\bibitem{b2}http://www.dcs.gla.ac.uk/~pat/52233/slides/Geometry1x1.pdf
 	\end{thebibliography}
-	
-	
 	
 	\section{Anhang}
 	
