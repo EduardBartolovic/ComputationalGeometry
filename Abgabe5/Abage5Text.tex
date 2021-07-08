@@ -102,7 +102,7 @@ basicstyle=\ttfamily
 	\[  b \geq -n_1 * x - n_2 * y + r \]
 	$\vec{n}$ entzieht man der Hessesche Normalenform:
 	\[ \vec{n} =  \left(\begin{array}{c}n_1\\n_2\end{array}\right) = \left(\begin{array}{c}\frac{p_y}{\sqrt{p_x^2+p_y^2}}\\\frac{-p_x}{\sqrt{p_x^2+p_y^2}}\end{array}\right) \]
-	$p_x$ und $p_x$ ist der Vektor einer Kante $g_n$:\\
+	$p_x$ und $p_y$ ist der Vektor einer Kante $g_n$:\\
 	\[ \vec{p} =  \left(\begin{array}{c}p_x\\p_y\end{array}\right) = \left(\begin{array}{c}x_{n+1} - x_n\\y_{n+1} - y_n\end{array}\right) \]
 	Zum Lösen dieses Problems wird die Bibliotheksmethode \textit{linprog} aus matlab verwendet.\\
 	\\
@@ -128,7 +128,8 @@ basicstyle=\ttfamily
 	\[ c_2*y+r \leq -10 \]
 	\[ -c_1*x+r \leq 0 \]
 	 Das Ergebnis einspricht: $x = 5, y = 5, r = -5$.\\
-	 Der Radius muss immer positiv sein, dementsprechend nimmt man immer den Betrag des Radius.\\
+	 \textbf{Negatives Vorzeichen in Radius:}\\
+	 Ein negativer Radius macht keinen Sinn. Trotzdem stellt sich heraus, dass ein negatives Vorzeichen entsteht, wenn die Kanten im Uhrzeigersinn definiert sind. Entweder müssen diese Kanten richtig geordnet sein oder man nimmt einfach immer den Betrag des Radius.\\
 	\\
 	\textbf{Beispiel für ein größeres Polygon:}\\
 	Das Ergebnis für das größere Polygon einspricht:\\
