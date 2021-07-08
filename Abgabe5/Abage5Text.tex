@@ -188,8 +188,11 @@ public Circle getLargestInscribedCircle(){
 	basicstyle=\ttfamily
 }
 	Berechnung des Inkreis des Polygons mit Matlab und LP
-\begin{lstlisting}[basicstyle=\tiny]
-data = [[0 0] ,[10 0], [10 10], [0 10], [0 0]];
+\begin{lstlisting}[basicstyle=\small]
+%file = fopen('testpolygon.txt');
+file = fopen('polygon.txt');
+data = fscanf(file, '%f');
+
 len = length(data)
 data = transpose(reshape(data, 2, len/2));
 len = length(data)
