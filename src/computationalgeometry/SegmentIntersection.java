@@ -4,11 +4,8 @@ import computationalgeometry.Tools.Line;
 import computationalgeometry.Tools.Segment;
 import computationalgeometry.Tools.Point;
 import java.io.BufferedReader;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -122,4 +119,5 @@ public class SegmentIntersection {
         return list;
     }
     
+
 }

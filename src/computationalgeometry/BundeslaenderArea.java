@@ -17,7 +17,7 @@ import java.util.Scanner;
  *
  * @author Eduard
  */
-public class PolygonArea {
+public class BundeslaenderArea {
 
     /**
      * @param args the command line arguments
@@ -29,7 +29,7 @@ public class PolygonArea {
         
         //bundeslaender.stream().flatMap(b -> b.getAreas().stream()).map(a -> a.isClosed()).forEach(System.out::println);
 
-        bundeslaender.forEach(b -> b.getAreas().forEach(p-> System.out.println(p.getCords().size())));
+        //bundeslaender.forEach(b -> b.getAreas().forEach(p-> System.out.println(p.getCords().size())));
         bundeslaender.forEach(System.out::println);
         
         //bundeslaender.forEach(b -> System.out.println(b.getName()));

@@ -45,59 +45,55 @@
 	
 	\maketitle
 	
-	
 %\begin{abstract}	
 %\end{abstract}
 
 	\section{Konvexe Hülle}
-	Für die Berechnung der Konvexe Hülle wurde das Programm \textit{qhull} \cite{b2} verwendet. \textit{qhull} verwendet den Quickhull Algorithmus um die Konvexe Hülle zu berechnen. \textit{qhull} lässt sich per Kommandozeile ansprechen. Ein Beispiels für einen Aufruf:
-	\begin{lstlisting}[basicstyle=\tiny]
+	Für die Berechnung der konvexen Hülle wurde das Programm \textit{qhull} \cite{b2} verwendet. \textit{qhull} verwendet den Quickhull Algorithmus um die konvexe Hülle zu berechnen. \textit{qhull} lässt sich per Kommandozeile ansprechen. Ein Beispiel für einen Aufruf:
+	\begin{lstlisting}[basicstyle=\small]
 	rbox 3 D2 | qconvex s o TO result
 	\end{lstlisting}
-	Der Befehl \textit{rbox} generiert eine gewisse Anzahl an Punkten in einer definierten Dimension. Der Befehl \textit{qconvex} berechnet die Konvexe Hülle. Mit einer Pipe können die Punkte direkt \textit{qconvex} übergeben werden.\\
-	Es wurden verschiedene Untersuchungen durchgeführt.\\
-	
-	
-	++++++++++++
-	1 Punkt mehr als Dimensionen nötig
-	+++++++
-
-	\textbf{Laufzeit von \textit{qhull}}
-	Es wurde die Laufzeit von \textit{qhull} untersucht. Hierbei wurden verschiedene Konfiguration bezüglich Anzahl und Dimension getestet. Um den Einfluss von Ausreißern zu reduzieren wurde das mittel aus fünf Durchläufen gebildet.\\
-	Die Ergebnisse sind in den beiden Abbildungen \ref{figure_1} und \ref{figure_2} zu sehen.
-	\begin{figure}[h]
+	Der Befehl \textit{rbox} generiert eine gewisse Anzahl an Punkten in einer definierten Dimension. Der Befehl \textit{qconvex} berechnet die konvexe Hülle. Mit einer Pipe können die Punkte direkt \textit{qconvex} übergeben werden.\\
+	\section{Laufzeit von \textit{qhull}}
+	Es wurde die Laufzeit von \textit{qhull} untersucht. Hierbei wurden verschiedene Konfiguration bezüglich Anzahl und Dimension getestet. Um den Einfluss von Ausreißern zu reduzieren, wurde das mittel aus fünf Durchläufen gebildet. Um das Problem etwas zu automatisieren, entwickelte ich ein Batchfile welches \textit{qhull} mit definierten Konfigurationen automatisch fünf mal gestartet hat. Die Anzahl der Punkte, die getestet worden sind:
+	\begin{itemize}
+		\item 1000
+		\item 10000
+		\item 100000
+		\item 500000
+		\item 1000000
+		\item 2500000
+		\item 5000000
+		\item 7500000
+		\item 10000000
+		\item 20000000
+	\end{itemize}
+	Jede Punkteanzahl wurde mit den Dimensionen 2 bis 8 getestet.\\
+	\textit{Qhull} ist auf Windows nur für 32 Bit kompiliert. Dies resultiert darin, dass Qhull nur 4 GB Arbeitsspeicher allokieren kann. Deshalb schlägt ab der Dimension 5 bei einer höheren Punktezahl das Programm fehl. Da aber die Laufzeiten extrem ansteigen, ist dies nicht weiter tragisch.\\
+	Die Ergebnisse der Messungen sind in den beiden Abbildungen \ref{figure_1} und \ref{figure_2} zu sehen.\\
+	\begin{figure}[h!]
 		\begin{center}
-			\includegraphics[width=7cm]{index.png}
+			\includegraphics[width=7cm]{Laufzeit.png}
 			\caption{Messung der Laufzeit abhängig zur Anzahl der Punkte und Dimensionen}
 			\label{figure_1}
 		\end{center}
 	\end{figure}
-	\begin{figure}[h]
+	\begin{figure}[h!]
 		\begin{center}
-			\includegraphics[width=7cm]{index2.png}
-			\caption{Messung der Laufzeit abhängig zur Anzahl der Punkte und Dimensionen (X-Achse ist Log Skalierung)}
+			\includegraphics[width=7cm]{Laufzeitlog.png}
+			\caption{Messung der Laufzeit abhängig zur Anzahl der Punkte und Dimensionen (X-Achse ist Log Skaliert)}
 			\label{figure_2}
 		\end{center}
 	\end{figure}\\
-	Wie gut in den Messungen zu sehen ist steigt der Aufwand mit Anzahl der Punkte und Dimensionen.
-	Die gemessenen Laufzeitsteigerungen entsprechen grob der Komplexität $\mathcal{O}(n * \log(n))$???????.\\
-	Dies entspricht auch dem Best Case Szenario von Quickhull. 
-	Quickhull nutzt einen Divide and Conquer Ansatz um das Problem zu lösen. Im Zwei- und Dreidimensionalen besitzt das Verfahren eine Komplexität von $\mathcal{O}(n * \log(r))$ wobei n die Anzahl der Input Punkten entspricht und r die Anzahl der betrachteten Punkte.
-	Im Zweidimensionalen hat Quickhull im Durchschnitt eine Komplexität bei zufälligen Punkten von $\mathcal{O}(n * \log(n))$.\\
-
-
-+++++
-N*logN Quickhull mit Worstcase $n^2$
-
-Höher: 
-
-Eine symmetrische Anordnung der Punkte besitzt jedoch eine höhere Wahrscheinlichkeit die Best Case (bester Fall) Laufzeitschranke von $\mathcal{O}(n * \log(n))$ zu verlassen und deutlich langsamer zu sein.
- 
-%Quickhull is a method of computing the convex hull of a finite set of points in n-dimensional %space. It uses a divide and conquer approach similar to that of quicksort, from which its name %derives. Its worst case complexity for 2-dimensional and 3-dimensional space is considered to be %O ( n log ⁡ ( r ) ), where n %{\displaystyle n} n is the number of input points and r {\displaystyle r} r is the number of %processed points.[1] However, unlike quicksort, there is no obvious way to convert quickhull %into a randomized algorithm. Nevertheless, there exist works from Smoothed Analysis which tell %us that the 2-dimensional Quick hull algorithm has expected runtime O ( n log ⁡ ( n ) ) %{\displaystyle O(n\log(n))} O(n\log(n))
-	
+	Wie gut in den Messungen zu sehen ist steigt der Aufwand mit Anzahl der Punkte und Dimensionen. Die Laufzeit steigt deutlicher mit der Dimension als mit den Punkten.\\
+	Die gemessenen Laufzeitsteigerungen der Punkte entsprechen grob der durchschnittlichen Komplexität von Quickhull mit $\mathcal{O}(n * \log(v))$ bei Dimensionen von 2 und 3. $n$ entspricht der Anzahl der Input Punkte. $v$ ist die Anzahl der Punkte der Konvexen Hülle.\\
+	Ab einer Dimension von größer 3 steigt der Aufwand auf $\mathcal{O}(\frac{n*f_v}{v})$. $f_v$ sei die maximale Anzahl von Facetten für eine konvexe Hülle aus den Eckpunkten.\\
+	In Abhängigkeit der Dimension wächst $f_v$ sehr schnell mit: \[\mathcal{O}(\frac{v^{\text{floor}(d/2)}}{\text{floor}(d/2)!})\]
+	\cite{b3}
 	
 	\begin{thebibliography}{00}
 		\bibitem{b2} http://www.qhull.org/html/qconvex.htm
+		\bibitem{b3} http://www.geom.uiuc.edu/~bradb/qhull3.1/html/qh-in.htm
 	\end{thebibliography}
 	
 	
@@ -106,16 +102,11 @@ Eine symmetrische Anordnung der Punkte besitzt jedoch eine höhere Wahrscheinlic
 
 	Batchfile zum Testen der Laufzeit von Q-Hull:
 	\begin{lstlisting}[basicstyle=\tiny]
-	rbox 5000000 D2 | qconvex s o TO result
-	rbox 5000000 D2 | qconvex s o TO result
-	rbox 5000000 D2 | qconvex s o TO result
-	rbox 5000000 D2 | qconvex s o TO result
-	rbox 5000000 D2 | qconvex s o TO result
-	rbox 5000000 D2 | qconvex s o TO result
-	rbox 5000000 D2 | qconvex s o TO result
-	rbox 5000000 D2 | qconvex s o TO result
-	rbox 5000000 D2 | qconvex s o TO result
-	rbox 5000000 D2 | qconvex s o TO result
+	rbox 5000000 D2 | qconvex s o TO result1
+	rbox 5000000 D2 | qconvex s o TO result2
+	rbox 5000000 D2 | qconvex s o TO result3
+	rbox 5000000 D2 | qconvex s o TO result4
+	rbox 5000000 D2 | qconvex s o TO result5
 	\end{lstlisting}	
 
 \end{document}

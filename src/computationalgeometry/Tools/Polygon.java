@@ -194,8 +194,12 @@ public class Polygon {
         return new Point(avgX, avgY);
     }
     
+    /**
+     * funktioniert nur wenn Polygon regulaer ist.
+     * @return 
+     */
     public Circle getLargestInscribedCircle(){
-        //if(!Konvex) throw new IllegalArgument;
+        //if(!isRegular) throw new IllegalArgument;
         final Point middle = getMiddle();
         
         double minDistance = Double.POSITIVE_INFINITY;
